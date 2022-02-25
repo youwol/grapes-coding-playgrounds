@@ -27,16 +27,17 @@ export class PlaygroundView {
     public readonly startingSrc: string
     public readonly testSrc: string
     public readonly language: string
-    public readonly transpiler: (source: string) => string
+    public readonly executor: Executor
     public readonly run$: Subject<boolean>
-
+    public readonly toDisplayable?: (obj: unknown) => Displayable
     public readonly mode$: BehaviorSubject<ModeConsole>
 
     constructor(params: {
         startingSrc: string
         testSrc: string
         language: string
-        transpiler: (source: string) => string
+        executor: Executor
+        toDisplayable?: (obj: unknown) => Displayable
     }) {
         Object.assign(this, params)
 
@@ -57,7 +58,8 @@ export class PlaygroundView {
                         src,
                         mode$: this.mode$,
                         testSrc: this.testSrc,
-                        transpiler: this.transpiler,
+                        executor: this.executor,
+                        toDisplayable: this.toDisplayable,
                     }),
             ),
         ]
@@ -113,6 +115,11 @@ class HeaderConsole {
     }
 }
 
+type Executor = (
+    source: string,
+    debug: (title: string, data: Displayable) => void,
+) => Displayable | Promise<Displayable>
+
 class ConsoleView {
     public readonly class = 'w-50 h-100 px-2 d-flex flex-column'
     public readonly src: string
@@ -120,26 +127,29 @@ class ConsoleView {
     public readonly log$: ReplaySubject<Log>
     public readonly children: VirtualDOM[]
     public readonly mode$: Subject<ModeConsole>
-    public readonly transpiler: (source: string) => string
+    public readonly toDisplayable?: (obj: unknown) => Displayable
+    public readonly executor: Executor
 
     constructor(params: {
         src: string
         mode$: Subject<ModeConsole>
         testSrc: string
-        transpiler: (source: string) => string
+        executor: Executor
+        toDisplayable?: (obj: unknown) => Displayable
     }) {
         Object.assign(this, params)
 
         this.log$ = new ReplaySubject()
 
-        const debug = (message: { title: string; data: Displayable }) => {
-            console.log('Debug!!', message)
-            this.log$.next(message)
+        const debug = (title: string, data: Displayable) => {
+            data = this.toDisplayable ? this.toDisplayable(data) : data
+            this.log$.next({ title, data })
         }
-        let transpiled = this.transpiler(this.src)
-        console.log({ src: this.src, transpiled })
 
-        const output$ = from(new Function(transpiled)()({ ...window, debug }))
+        const executed = this.executor(this.src, debug)
+
+        const output$ =
+            executed instanceof Promise ? from(executed) : of(executed)
 
         this.children = [
             child$(output$, (output) => {
