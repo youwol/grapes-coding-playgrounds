@@ -26,10 +26,10 @@ export function renderJavaScript() {
         .then((_) => {
             return cdnClient.install({
                 scripts: [
-                    '@youwol/grapes-coding-playgrounds#latest~dist/js-playground.js',
+                    '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/js-playground.js',
                 ],
                 aliases: {
-                    lib: '@youwol/grapes-coding-playgrounds',
+                    lib: '@youwol/grapes-coding-playgrounds/js-playground',
                 },
             })
         }) as unknown as Promise<{ lib: Lib }>
@@ -57,10 +57,10 @@ export function renderTypeScript() {
         .then((_) => {
             return cdnClient.install({
                 scripts: [
-                    '@youwol/grapes-coding-playgrounds#latest~dist/ts-playground.js',
+                    '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/ts-playground.js',
                 ],
                 aliases: {
-                    lib: '@youwol/grapes-coding-playgrounds',
+                    lib: '@youwol/grapes-coding-playgrounds/ts-playground',
                 },
             })
         }) as unknown as Promise<{ lib: Lib }>
@@ -129,10 +129,10 @@ export function renderPython() {
         const { lib } = (await cdnClient.install(
             {
                 scripts: [
-                    '@youwol/grapes-coding-playgrounds#latest~dist/python-playground.js',
+                    '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/python-playground.js',
                 ],
                 aliases: {
-                    lib: '@youwol/grapes-coding-playgrounds',
+                    lib: '@youwol/grapes-coding-playgrounds/python-playground',
                 },
             },
             {

@@ -5,7 +5,7 @@
   "author": "",
   "keywords": [],
   "homepage": "https://github.com/youwol/grapes-coding-playgrounds#README.md",
-  "main": "dist/editor.js",
+  "main": "dist/@youwol/grapes-coding-playgrounds.js",
   "types": "src/index.ts",
   "scripts": {
     "build": "yarn build:dev",
@@ -33,6 +33,7 @@
     "@youwol/flux-view": "^0.0.12",
     "@youwol/fv-tree": "^0.0.5",
     "@youwol/cdn-client": "^0.0.12",
+    "@pyodide/pyodide": "0.17.1",
     "rxjs": "6.x",
     "eslint": "7.23.0",
     "eslint-config-prettier": "^8.3.0",

@@ -1,15 +1,18 @@
 const path = require('path')
-const pkg = require('./package.json')
 const ROOT = path.resolve(__dirname, 'src')
 const DESTINATION = path.resolve(__dirname, 'dist')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
+const packageJson = require('./package.json')
+
 module.exports = {
     context: ROOT,
     entry: {
-        editor: './lib/index.ts',
-        'js-playground': './lib/runner/js-playground.ts',
-        'ts-playground': './lib/runner/ts-playground.ts',
+        [packageJson.name]: './lib/index.ts',
+        [packageJson.name + '/js-playground']: './lib/runner/js-playground.ts',
+        [packageJson.name + '/ts-playground']: './lib/runner/ts-playground.ts',
+        [packageJson.name + '/python-playground']:
+            './lib/runner/python-playground.ts',
     },
     plugins: [
         new BundleAnalyzerPlugin({
@@ -24,7 +27,7 @@ module.exports = {
         path: DESTINATION,
         libraryTarget: 'umd',
         umdNamedDefine: true,
-        library: pkg.name,
+        library: '[name]',
         filename: '[name].js',
         globalObject: `(typeof self !== 'undefined' ? self : this)`,
     },
