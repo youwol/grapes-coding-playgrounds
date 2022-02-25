@@ -60,9 +60,9 @@ export class CodeEditorView {
                                 }
                                 this.src$.next(editor.getValue())
                             })
-                            document
-                                .querySelector('.CodeMirror-wrap')
-                                .classList.add('h-100')
+                            elem.querySelector('.CodeMirror').classList.add(
+                                'h-100',
+                            )
                         },
                     },
                 ],
