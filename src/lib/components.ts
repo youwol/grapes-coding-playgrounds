@@ -60,6 +60,11 @@ export function componentFactory({
         model: {
             defaults: {
                 script: canvasRendering,
+                style: {
+                    'max-height': '100%',
+                    height: '500px',
+                },
+                styles: '.CodeMirror {height: 100% !important;}',
                 droppable: false,
                 attributes: {
                     componentType,
