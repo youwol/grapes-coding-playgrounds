@@ -2,11 +2,13 @@ import * as grapesjs from 'grapesjs'
 import { editCode } from './editor'
 import {
     defaultExeSrcJs,
+    defaultExeSrcPython,
     defaultExeSrcTs,
     defaultTestSrcJs,
+    defaultTestSrcPython,
     defaultTestSrcTs,
 } from './default-codes'
-import { renderJavaScript, renderTypeScript } from './renderers'
+import { renderJavaScript, renderPython, renderTypeScript } from './renderers'
 
 export function addComponents(editor: grapesjs.Editor) {
     editor.DomComponents.addType(
@@ -30,6 +32,18 @@ export function addComponents(editor: grapesjs.Editor) {
             canvasRendering: renderTypeScript,
             defaultExeSrc: defaultExeSrcTs,
             defaultTestSrc: defaultTestSrcTs,
+        }),
+    )
+
+    editor.DomComponents.addType(
+        'python-playground',
+        componentFactory({
+            componentType: 'python-playground',
+            language: 'python',
+            grapesEditor: editor,
+            canvasRendering: renderPython,
+            defaultExeSrc: defaultExeSrcPython,
+            defaultTestSrc: defaultTestSrcPython,
         }),
     )
 }

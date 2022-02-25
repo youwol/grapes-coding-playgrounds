@@ -43,3 +43,29 @@ return async (result, {expect}) => {
     expect("A dummy passing test", true)
     return true
 }`
+
+export const defaultExeSrcPython = `
+import sys
+
+class PythonObject:
+    def __init__(self, title, value):
+        self.title = title
+        self.value = value
+    
+def processing(debug):    
+
+    obj = PythonObject("hello", 5)
+    print(obj)
+    debug("pythonObject", obj.__dict__)
+    return True
+    
+processing
+`
+
+export const defaultTestSrcPython = `
+def test(result, expect) => {
+    expect("A dummy passing test", true)
+    return true
+}
+test
+`
