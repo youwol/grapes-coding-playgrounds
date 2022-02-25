@@ -17,7 +17,10 @@ import { JournalView } from './journal.view'
 export class PlaygroundView {
     public readonly appId: string
     public readonly class =
-        'd-flex fv-text-primary fv-bg-background w-100 h-100 overflow-auto p-2'
+        'd-flex h-100 fv-text-primary fv-bg-background w-100 p-2'
+    public readonly style = {
+        maxHeight: '100%',
+    }
     public readonly children: VirtualDOM[]
     public readonly src$: BehaviorSubject<string>
 
@@ -111,7 +114,7 @@ class HeaderConsole {
 }
 
 class ConsoleView {
-    public readonly class = 'w-50 h-100 px-2'
+    public readonly class = 'w-50 h-100 px-2 d-flex flex-column'
     public readonly src: string
     public readonly testSrc: string
     public readonly log$: ReplaySubject<Log>

@@ -7,11 +7,11 @@ export class CodeEditorView {
         mode: 'javascript',
         lineNumbers: true,
         theme: 'blackboard',
-        lineWrapping: true,
+        lineWrapping: false,
         indentUnit: 4,
     }
     public readonly language: string
-    public readonly class = 'w-50 h-100 d-flex flex-column'
+    public readonly class = 'w-50 h-100 d-flex flex-column overflow-auto'
     public readonly style = {
         'font-size': 'initial',
     }
