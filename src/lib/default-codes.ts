@@ -9,7 +9,7 @@ return async ({debug}) => {
     const div = document.createElement('div')
     div.innerText = "I'm an html div"
     div.classList.add('fv-text-focus', 'text-center', 'p-1', 'border', 'rounded')
-    debug({title: 'htmlElement', data: div})
+    debug('htmlElement', div)
     
     return true
 }
@@ -33,7 +33,7 @@ return async ({debug}) => {
         }
     }
     const obj = new TsObject("hello", 5)
-    debug({title: 'tsObject', data: obj})
+    debug('tsObject', obj)
        
     return true
 }
