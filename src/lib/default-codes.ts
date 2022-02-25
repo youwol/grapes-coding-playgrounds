@@ -4,7 +4,7 @@ return async ({debug}) => {
     const jsObject = { 
         title: 'hello js playground!'
     }
-    debug({title: 'jsObject', data: jsObject})
+    debug('jsObject', jsObject)
     
     const div = document.createElement('div')
     div.innerText = "I'm an html div"
