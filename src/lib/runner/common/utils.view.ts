@@ -69,7 +69,6 @@ export class DataView {
 
     constructor(params: { data: Displayable }) {
         Object.assign(this, params)
-        console.log('Data view', this.data)
         const child =
             this.data instanceof HTMLElement
                 ? this.data
