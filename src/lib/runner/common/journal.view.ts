@@ -3,7 +3,11 @@ import { child$, childrenAppendOnly$, VirtualDOM } from '@youwol/flux-view'
 import { DataView, Log, LogObjectHeader } from './utils.view'
 import { map } from 'rxjs/operators'
 
-export class DebugView {
+export class JournalView {
+    public readonly class = 'flex-grow-1 d-flex flex-column'
+    public readonly style = {
+        minHeight: '0px',
+    }
     public readonly log$: Observable<Log>
     public readonly children: VirtualDOM[]
     public readonly selectedLog$: Subject<Log>
@@ -27,7 +31,7 @@ export class DebugView {
                 ),
             },
             {
-                class: 'flex-grow-1',
+                class: 'flex-grow-1 overflow-auto',
                 children: [
                     child$(
                         this.selectedLog$,

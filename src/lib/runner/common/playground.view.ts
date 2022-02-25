@@ -2,16 +2,17 @@ import {
     BehaviorSubject,
     combineLatest,
     from,
+    of,
     ReplaySubject,
     Subject,
 } from 'rxjs'
 import { attr$, child$, Stream$, VirtualDOM } from '@youwol/flux-view'
 import { CodeEditorView } from './code-editor.view'
 import { Displayable, Log } from './utils.view'
-import { OutputView } from './output.view'
-import { DebugView } from './debug.view'
 import { TestView } from './test.view'
 import { withLatestFrom } from 'rxjs/operators'
+import { ErrorsView, InterpretError } from './errors.view'
+import { JournalView } from './journal.view'
 
 export class PlaygroundView {
     public readonly appId: string
@@ -36,7 +37,7 @@ export class PlaygroundView {
     }) {
         Object.assign(this, params)
 
-        this.mode$ = new BehaviorSubject('output')
+        this.mode$ = new BehaviorSubject('journal')
         this.src$ = new BehaviorSubject(this.startingSrc)
         this.run$ = new Subject()
 
@@ -60,10 +61,9 @@ export class PlaygroundView {
     }
 }
 
-type ModeConsole = 'output' | 'debug' | 'test'
+type ModeConsole = 'journal' | 'test'
 const iconsHeader: Record<ModeConsole, string> = {
-    output: 'fa-eye ',
-    debug: 'fa-bug',
+    journal: 'fa-newspaper ',
     test: 'fa-check',
 }
 
@@ -104,8 +104,7 @@ class HeaderConsole {
     constructor(params: { mode$: Subject<ModeConsole> }) {
         Object.assign(this, params)
         this.children = [
-            new IconHeaderConsole({ target: 'output', mode$: this.mode$ }),
-            new IconHeaderConsole({ target: 'debug', mode$: this.mode$ }),
+            new IconHeaderConsole({ target: 'journal', mode$: this.mode$ }),
             new IconHeaderConsole({ target: 'test', mode$: this.mode$ }),
         ]
     }
@@ -140,15 +139,27 @@ class ConsoleView {
         const output$ = from(new Function(transpiled)()({ ...window, debug }))
 
         this.children = [
-            new HeaderConsole({ mode$: this.mode$ }),
+            child$(output$, (output) => {
+                if (output instanceof InterpretError)
+                    return {
+                        class: 'fas fa-bug fv-text-error w-100 text-center',
+                    }
+                return new HeaderConsole({ mode$: this.mode$ })
+            }),
             child$(
                 combineLatest([this.mode$, output$]),
                 ([mode, output]: [mode: ModeConsole, output: Displayable]) => {
-                    if (mode == 'output') {
-                        return new OutputView({ output })
+                    if (output instanceof InterpretError) {
+                        return new ErrorsView({ error: output })
                     }
-                    if (mode == 'debug') {
-                        return new DebugView({ log$: this.log$ })
+                    if (mode == 'journal') {
+                        this.log$.next({
+                            title: 'output',
+                            data: this.toDisplayable
+                                ? this.toDisplayable(output)
+                                : output,
+                        })
+                        return new JournalView({ log$: this.log$ })
                     }
                     if (mode == 'test') {
                         return new TestView({
