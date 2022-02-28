@@ -1,15 +1,14 @@
 import * as grapesjs from 'grapesjs'
-import { editCode } from './editor'
+
 import {
     defaultExeSrcJs,
-    defaultExeSrcPython,
     defaultExeSrcTs,
     defaultTestSrcJs,
-    defaultTestSrcPython,
     defaultTestSrcTs,
 } from './default-codes'
 import { renderJavaScript, renderTypeScript } from './renderers'
-import { renderPython } from './runner/python/renderer'
+import { editSrcTrait, isComponent } from './utils'
+import { addPythonComponent } from './python-component'
 
 export function addComponents(editor: grapesjs.Editor) {
     editor.DomComponents.addType(
@@ -66,12 +65,7 @@ export function componentFactory({
 }) {
     return {
         extendFn: ['initialize'],
-        isComponent: (el: HTMLElement) => {
-            return (
-                el.getAttribute &&
-                el.getAttribute('componentType') == componentType
-            )
-        },
+        isComponent: isComponent(componentType),
         model: {
             defaults: {
                 script: canvasRendering,
@@ -87,38 +81,18 @@ export function componentFactory({
                     'src-test': defaultTestSrc,
                 },
                 traits: [
-                    {
-                        name: 'editSrc',
-                        label: 'edit source',
-                        type: 'button',
-                        text: 'Click me',
-                        full: true, // Full width button
-                        command: (editor) => {
-                            const component = editor.getSelected()
-                            if (!component.getAttributes().src) {
-                                component.addAttributes({
-                                    src: defaultExeSrc,
-                                })
-                            }
-                            editCode('src', grapesEditor, language)
-                        },
-                    },
-                    {
-                        name: 'editTest',
-                        label: 'edit test',
-                        type: 'button',
-                        text: 'Click me',
-                        full: true, // Full width button
-                        command: (editor) => {
-                            const component = editor.getSelected()
-                            if (!component.getAttributes()['src-test']) {
-                                component.addAttributes({
-                                    'src-test': defaultTestSrc,
-                                })
-                            }
-                            editCode('src-test', grapesEditor, language)
-                        },
-                    },
+                    editSrcTrait({
+                        attributeName: 'src',
+                        src: defaultExeSrc,
+                        language,
+                        grapesEditor,
+                    }),
+                    editSrcTrait({
+                        attributeName: 'src-test',
+                        src: defaultTestSrc,
+                        language,
+                        grapesEditor,
+                    }),
                 ],
             },
             initialize() {
