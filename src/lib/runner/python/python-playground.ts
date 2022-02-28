@@ -3,6 +3,9 @@ import { PlaygroundView } from '../common'
 import { InterpretError } from '../common/errors.view'
 
 function outputPython2Js(data) {
+    if (!data) {
+        return data
+    }
     let recFct = (d) => {
         if (d instanceof Map) {
             let converted = {}
@@ -13,7 +16,9 @@ function outputPython2Js(data) {
         }
         return d
     }
-    return recFct(data.toJs ? data.toJs() : data)
+    const jsData = data.toJs && data.toJs()
+
+    return recFct(jsData ? jsData : data)
 }
 
 export function renderElement(element: HTMLElement, pyodide) {
