@@ -6,6 +6,12 @@
 import { CdnClient } from '../types'
 
 export function renderPython() {
+    const imports = {
+        numpy: 'numpy',
+        pandas: 'pandas',
+        'scikit-learn': 'sklearn',
+    }
+
     let logo = `<div style='font-size:xxx-large'>🐍</div>`
     const cdnClient: CdnClient = window['@youwol/cdn-client']
     const elemHTML: HTMLElement = this
@@ -29,7 +35,11 @@ export function renderPython() {
     async function loadDependencies() {
         await cdnClient.install(
             {
-                modules: ['@youwol/fv-tree', 'codemirror', '@pyodide/pyodide'],
+                modules: [
+                    { name: '@youwol/fv-tree', version: 'latest' },
+                    { name: 'codemirror', version: 'latest' },
+                    { name: '@pyodide/pyodide', version: pyodideVersion },
+                ],
                 scripts: ['codemirror#5.52.0~mode/python.min.js'],
                 css: [
                     'codemirror#5.52.0~codemirror.min.css',
@@ -54,8 +64,13 @@ export function renderPython() {
         loadingScreen.next(
             new cdnClient.CdnMessageEvent('loadPyodide', 'Pyodide loaded'),
         )
-
-        const promises = ['numpy', 'pandas']
+        const messageCallback = (m) => {
+            m = m.split('from')[0]
+            loadingScreen.next(
+                new cdnClient.CdnMessageEvent('load package_', m),
+            )
+        }
+        const promises = ['numpy', 'pandas', 'scikit-learn']
             .filter((name) => elemHTML.hasAttribute(name))
             .map((name) => {
                 loadingScreen.next(
@@ -64,14 +79,14 @@ export function renderPython() {
                         `${name} loading...`,
                     ),
                 )
-                return pyodide.loadPackage(name).then(() => {
+                return pyodide.loadPackage(name, messageCallback).then(() => {
                     loadingScreen.next(
                         new cdnClient.CdnMessageEvent(
                             `load${name}`,
                             `${name} installing...`,
                         ),
                     )
-                    pyodide.runPython(`import ${name}`)
+                    pyodide.runPython(`import ${imports[name]}`)
                     loadingScreen.next(
                         new cdnClient.CdnMessageEvent(
                             `load${name}`,

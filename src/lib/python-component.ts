@@ -39,7 +39,7 @@ export function addPythonComponent(editor: grapesjs.Editor) {
         defaultExeSrc: defaultExeSrc,
         defaultTestSrc: defaultTestSrc,
     })
-    const packages = ['numpy', 'pandas']
+    const packages = ['numpy', 'pandas', 'scikit-learn']
     packages.forEach((name) => {
         base.model.defaults.traits.push({
             type: 'checkbox',
