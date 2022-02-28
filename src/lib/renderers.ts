@@ -108,25 +108,25 @@ export function renderPython() {
             },
         )
         if (!window['loadedPyodide']) {
-            loadingScreen.next(
-                new cdnClient.CdnMessageEvent(
-                    'loadPyodide',
-                    'Loading Pyodide...',
-                ),
-            )
-            window['loadedPyodide'] = await window['loadPyodide']({
+            window['loadedPyodide'] = window['loadPyodide']({
                 indexURL: indexPyodide,
             })
         }
-
-        const pyodide = window['loadedPyodide']
+        loadingScreen.next(
+            new cdnClient.CdnMessageEvent('loadPyodide', 'Loading Pyodide...'),
+        )
+        const pyodide = await window['loadedPyodide']
         loadingScreen.next(
             new cdnClient.CdnMessageEvent('loadPyodide', 'Pyodide loaded'),
         )
         loadingScreen.next(
-            new cdnClient.CdnMessageEvent('loadNumpy', 'numpy installing...'),
+            new cdnClient.CdnMessageEvent('loadNumpy', 'numpy loading...'),
         )
         await pyodide.loadPackage('numpy')
+        loadingScreen.next(
+            new cdnClient.CdnMessageEvent('loadNumpy', 'numpy installing...'),
+        )
+        pyodide.runPython('import numpy')
         loadingScreen.next(
             new cdnClient.CdnMessageEvent('loadNumpy', 'numpy installed'),
         )
