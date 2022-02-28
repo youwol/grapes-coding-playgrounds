@@ -71,10 +71,20 @@ export function renderTypeScript() {
 }
 
 export function renderPython() {
+    let logo = `<div style='font-size:xxx-large'>🐍</div>`
     const cdnClient: CdnClient = window['@youwol/cdn-client']
+    const elemHTML: HTMLElement = this
+    elemHTML.style.setProperty('position', 'relative')
     const loadingScreen = new cdnClient.LoadingScreenView({
         container: this,
-        mode: 'svg',
+        logo,
+        wrapperStyle: {
+            position: 'absolute',
+            top: '0',
+            width: '100%',
+            height: '100%',
+            'font-weight': 'bolder',
+        },
     })
     loadingScreen.render()
 
