@@ -3,9 +3,9 @@
  * https://www.npmjs.com/package/@typescript/vfs
  */
 import { render } from '@youwol/flux-view'
-import { Displayable, PlaygroundView } from './common'
+import { Displayable, PlaygroundView } from '../common'
 import { ModuleKind, transpileModule } from 'typescript'
-import { runJavascriptCode } from './utils'
+import { runJavascriptCode } from '../utils'
 
 export function renderElement(element: HTMLElement) {
     const vDOM = new PlaygroundView({

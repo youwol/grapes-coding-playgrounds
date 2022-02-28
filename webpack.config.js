@@ -9,8 +9,10 @@ module.exports = {
     context: ROOT,
     entry: {
         [packageJson.name]: './lib/index.ts',
-        [packageJson.name + '/js-playground']: './lib/runner/js-playground.ts',
-        [packageJson.name + '/ts-playground']: './lib/runner/ts-playground.ts',
+        [packageJson.name + '/js-playground']:
+            './lib/runner/javascript/js-playground.ts',
+        [packageJson.name + '/ts-playground']:
+            './lib/runner/typescript/ts-playground.ts',
         [packageJson.name + '/python-playground']:
             './lib/runner/python/python-playground.ts',
     },

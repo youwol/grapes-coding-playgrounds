@@ -1,6 +1,6 @@
 import { render } from '@youwol/flux-view'
-import { PlaygroundView } from './common'
-import { InterpretError } from './common/errors.view'
+import { PlaygroundView } from '../common'
+import { InterpretError } from '../common/errors.view'
 
 export function renderElement(element: HTMLElement) {
     const vDOM = new PlaygroundView({
