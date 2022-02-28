@@ -3,7 +3,31 @@ import { componentFactoryBase } from './utils'
 
 import { renderPython } from './runner/python/renderer'
 
-import { defaultExeSrcPython, defaultTestSrcPython } from './default-codes'
+const defaultExeSrc = `
+import sys
+
+class PythonObject:
+    def __init__(self, title, value):
+        self.title = title
+        self.value = value
+    
+def processing(debug):    
+
+    obj = PythonObject("hello", 5)
+    print(obj)
+    debug("pythonObject", obj.__dict__)
+    return True
+    
+processing
+`
+
+const defaultTestSrc = `
+def test(result, expect) => {
+    expect("A dummy passing test", true)
+    return true
+}
+test
+`
 
 export function addPythonComponent(editor: grapesjs.Editor) {
     const componentType = 'python-playground'
@@ -12,8 +36,8 @@ export function addPythonComponent(editor: grapesjs.Editor) {
         language: 'python',
         grapesEditor: editor,
         canvasRendering: renderPython,
-        defaultExeSrc: defaultExeSrcPython,
-        defaultTestSrc: defaultTestSrcPython,
+        defaultExeSrc: defaultExeSrc,
+        defaultTestSrc: defaultTestSrc,
     })
     const packages = ['numpy', 'pandas']
     packages.forEach((name) => {
