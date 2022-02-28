@@ -13,6 +13,7 @@ export function renderPython() {
     }
 
     let logo = `<div style='font-size:xxx-large'>🐍</div>`
+    const pyodideVersion = '0.19.1'
     const cdnClient: CdnClient = window['@youwol/cdn-client']
     const elemHTML: HTMLElement = this
     elemHTML.style.setProperty('position', 'relative')
@@ -30,7 +31,7 @@ export function renderPython() {
     loadingScreen.render()
 
     let indexPyodide =
-        cdnClient.getUrlBase('@pyodide/pyodide', '0.17.0') + '/full'
+        cdnClient.getUrlBase('@pyodide/pyodide', pyodideVersion) + '/full'
 
     async function loadDependencies() {
         await cdnClient.install(
