@@ -8,7 +8,8 @@ import {
     defaultTestSrcPython,
     defaultTestSrcTs,
 } from './default-codes'
-import { renderJavaScript, renderPython, renderTypeScript } from './renderers'
+import { renderJavaScript, renderTypeScript } from './renderers'
+import { renderPython } from './runner/python/renderer'
 
 export function addComponents(editor: grapesjs.Editor) {
     editor.DomComponents.addType(

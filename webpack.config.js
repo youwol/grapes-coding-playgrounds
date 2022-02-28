@@ -12,7 +12,7 @@ module.exports = {
         [packageJson.name + '/js-playground']: './lib/runner/js-playground.ts',
         [packageJson.name + '/ts-playground']: './lib/runner/ts-playground.ts',
         [packageJson.name + '/python-playground']:
-            './lib/runner/python-playground.ts',
+            './lib/runner/python/python-playground.ts',
     },
     plugins: [
         new BundleAnalyzerPlugin({
