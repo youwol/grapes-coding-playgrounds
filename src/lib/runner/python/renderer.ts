@@ -54,17 +54,34 @@ export function renderPython() {
         loadingScreen.next(
             new cdnClient.CdnMessageEvent('loadPyodide', 'Pyodide loaded'),
         )
-        loadingScreen.next(
-            new cdnClient.CdnMessageEvent('loadNumpy', 'numpy loading...'),
-        )
-        await pyodide.loadPackage('numpy')
-        loadingScreen.next(
-            new cdnClient.CdnMessageEvent('loadNumpy', 'numpy installing...'),
-        )
-        pyodide.runPython('import numpy')
-        loadingScreen.next(
-            new cdnClient.CdnMessageEvent('loadNumpy', 'numpy installed'),
-        )
+
+        const promises = ['numpy', 'pandas']
+            .filter((name) => elemHTML.hasAttribute(name))
+            .map((name) => {
+                loadingScreen.next(
+                    new cdnClient.CdnMessageEvent(
+                        `load${name}`,
+                        `${name} loading...`,
+                    ),
+                )
+                return pyodide.loadPackage(name).then(() => {
+                    loadingScreen.next(
+                        new cdnClient.CdnMessageEvent(
+                            `load${name}`,
+                            `${name} installing...`,
+                        ),
+                    )
+                    pyodide.runPython(`import ${name}`)
+                    loadingScreen.next(
+                        new cdnClient.CdnMessageEvent(
+                            `load${name}`,
+                            `${name} installed`,
+                        ),
+                    )
+                    return true
+                })
+            })
+        await Promise.all(promises)
         loadingScreen.next(
             new cdnClient.CdnMessageEvent(
                 'load python-playground',

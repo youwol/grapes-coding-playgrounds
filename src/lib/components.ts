@@ -35,17 +35,7 @@ export function addComponents(editor: grapesjs.Editor) {
         }),
     )
 
-    editor.DomComponents.addType(
-        'python-playground',
-        componentFactory({
-            componentType: 'python-playground',
-            language: 'python',
-            grapesEditor: editor,
-            canvasRendering: renderPython,
-            defaultExeSrc: defaultExeSrcPython,
-            defaultTestSrc: defaultTestSrcPython,
-        }),
-    )
+    addPythonComponent(editor)
 }
 
 export function componentFactory({
