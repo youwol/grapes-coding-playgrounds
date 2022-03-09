@@ -1,10 +1,10 @@
-import { Observable, Subject } from 'rxjs'
-import { child$, childrenAppendOnly$, VirtualDOM } from '@youwol/flux-view'
+import { BehaviorSubject, Observable, Subject } from 'rxjs'
+import { attr$, childrenAppendOnly$, VirtualDOM } from '@youwol/flux-view'
 import { DataView, Log, LogObjectHeader } from './utils.view'
 import { map } from 'rxjs/operators'
 
 export class JournalView {
-    public readonly class = 'flex-grow-1 d-flex flex-column'
+    public readonly class = 'h-100 d-flex flex-column'
     public readonly style = {
         minHeight: '0px',
     }
@@ -15,7 +15,7 @@ export class JournalView {
     constructor(params: { log$: Observable<Log> }) {
         Object.assign(this, params)
 
-        this.selectedLog$ = new Subject()
+        this.selectedLog$ = new BehaviorSubject(undefined)
 
         this.children = [
             {
@@ -30,14 +30,33 @@ export class JournalView {
                     },
                 ),
             },
-            {
-                class: 'flex-grow-1 overflow-auto',
-                children: [
-                    child$(
+            /*Below we could have used
+                child$(
                         this.selectedLog$,
                         (log) => new DataView({ data: log.data }),
                     ),
-                ],
+              But it leads to some bug regarding python & lifetime of proxy.
+              It is safer to create all views at once, and not recreating them afterward
+              */
+
+            {
+                class: 'flex-grow-1 overflow-auto',
+                style: {
+                    minHeight: '0',
+                },
+                children: childrenAppendOnly$(
+                    this.log$.pipe(map((d) => [d])),
+                    (log: Log) => {
+                        return {
+                            class: attr$(this.selectedLog$, (selected) =>
+                                selected && selected.title == log.title
+                                    ? 'h-100'
+                                    : 'd-none',
+                            ),
+                            children: [new DataView({ data: log.data })],
+                        }
+                    },
+                ),
             },
         ]
     }

@@ -19,7 +19,7 @@ export class LogObjectHeader {
         width: 'fit-content',
     }
 
-    public readonly selectedLog$: Subject<Log>
+    public readonly selectedLog$: Subject<Log | undefined>
     public readonly onclick = () => {
         this.selectedLog$.next(this.log)
     }
@@ -30,7 +30,7 @@ export class LogObjectHeader {
         this.class = attr$(
             this.selectedLog$,
             (log): string =>
-                log.title == this.log.title ? 'fv-text-focus ' : '',
+                log && log.title == this.log.title ? 'fv-text-focus ' : '',
             {
                 wrapper: (d) => `${d} ${this.baseClass}`,
                 untilFirst: this.baseClass,

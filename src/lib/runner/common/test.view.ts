@@ -1,5 +1,5 @@
 import { childrenAppendOnly$, VirtualDOM } from '@youwol/flux-view'
-import { from, ReplaySubject } from 'rxjs'
+import { ReplaySubject } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 export class TestView {
@@ -18,15 +18,19 @@ export class TestView {
             console.log('Expect', { title, validated })
             this.expect$.next({ title, validated })
         }
-        console.log('testSrc', this.testSrc)
-        from(
-            new Function(this.testSrc)()(this.output, {
+        try {
+            let result = new Function(this.testSrc)()(this.output, {
                 ...window,
                 expect,
-            }),
-        ).subscribe(() => {
-            /* only side effects of pushing 'expect'*/
-        })
+            })
+            if (result instanceof Promise) {
+                result.then(() => {
+                    /*no op*/
+                })
+            }
+        } catch (e) {
+            console.log('error', e)
+        }
         this.children = [
             {
                 children: childrenAppendOnly$(

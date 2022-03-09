@@ -1,7 +1,7 @@
 import {
     BehaviorSubject,
-    combineLatest,
     from,
+    Observable,
     of,
     ReplaySubject,
     Subject,
@@ -14,6 +14,44 @@ import { withLatestFrom } from 'rxjs/operators'
 import { ErrorsView, InterpretError } from './errors.view'
 import { JournalView } from './journal.view'
 
+export type SplitMode = 'split' | 'code-only' | 'output-only'
+
+export class SplitModeView implements VirtualDOM {
+    public readonly splitMode$ = new BehaviorSubject<SplitMode>('split')
+    public readonly class =
+        'd-flex flex-column align-items-center justify-content-center pr-1 border-right'
+    public readonly children: VirtualDOM[]
+
+    constructor(params: { splitMode$: BehaviorSubject<SplitMode> }) {
+        Object.assign(this, params)
+
+        let iconView = (target: SplitMode) => {
+            const classes: Record<SplitMode, string> = {
+                split: 'fa-columns',
+                'output-only': 'fa-eye',
+                'code-only': 'fa-code',
+            }
+            const commonClasses = 'fas fv-pointer my-1'
+            return {
+                class: attr$(
+                    this.splitMode$,
+                    (mode): string => (mode == target ? 'fv-text-focus' : ''),
+                    {
+                        wrapper: (d) =>
+                            `${d} ${commonClasses} ${classes[target]}`,
+                    },
+                ),
+                onclick: () => this.splitMode$.next(target),
+            }
+        }
+        this.children = [
+            iconView('split'),
+            iconView('code-only'),
+            iconView('output-only'),
+        ]
+    }
+}
+
 export class PlaygroundView {
     public readonly appId: string
     public readonly class =
@@ -22,54 +60,79 @@ export class PlaygroundView {
         maxHeight: '100%',
     }
     public readonly children: VirtualDOM[]
-    public readonly src$: BehaviorSubject<string>
 
-    public readonly startingSrc: string
     public readonly testSrc: string
     public readonly language: string
     public readonly executor: Executor
-    public readonly run$: Subject<boolean>
+    public readonly run$: BehaviorSubject<boolean>
     public readonly toDisplayable?: (obj: unknown) => Displayable
     public readonly mode$: BehaviorSubject<ModeConsole>
+    public readonly splitMode$: BehaviorSubject<SplitMode>
+    public readonly codeEditorView: CodeEditorView
+    public readonly diagnosticsView?: (editor: CodeEditorView) => VirtualDOM
 
     constructor(params: {
-        startingSrc: string
+        splitMode: SplitMode
         testSrc: string
-        language: string
+        codeEditorView: CodeEditorView
+        diagnosticsView?: (editor: CodeEditorView) => VirtualDOM
         executor: Executor
         toDisplayable?: (obj: unknown) => Displayable
     }) {
         Object.assign(this, params)
-
+        this.splitMode$ = new BehaviorSubject<SplitMode>(params.splitMode)
         this.mode$ = new BehaviorSubject('journal')
-        this.src$ = new BehaviorSubject(this.startingSrc)
-        this.run$ = new Subject()
+        this.run$ = new BehaviorSubject(false)
 
         this.children = [
-            new CodeEditorView({
-                src$: this.src$,
-                run$: this.run$,
-                language: this.language,
-            }),
+            new SplitModeView({ splitMode$: this.splitMode$ }),
+            child$(this.splitMode$, (mode) =>
+                mode != 'output-only'
+                    ? {
+                          class: 'h-100 w-100 d-flex flex-column',
+                          children: [
+                              {
+                                  class: 'w-100 d-flex justify-content-center',
+                                  children: [
+                                      {
+                                          tag: 'i',
+                                          class: 'fv-pointer rounded m-1 fas fa-play fv-hover-text-focus',
+                                          onclick: () => this.run$.next(true),
+                                      },
+                                  ],
+                              },
+                              {
+                                  class: 'flex-grow-1',
+                                  style: { minHeight: '0px' },
+                                  children: [this.codeEditorView],
+                              },
+                          ],
+                      }
+                    : {},
+            ),
             child$(
-                this.run$.pipe(withLatestFrom(this.src$)),
+                this.run$.pipe(withLatestFrom(this.codeEditorView.src$)),
                 ([_, src]) =>
                     new ConsoleView({
                         src,
+                        splitMode$: this.splitMode$,
                         mode$: this.mode$,
                         testSrc: this.testSrc,
                         executor: this.executor,
                         toDisplayable: this.toDisplayable,
+                        diagnosticsView: this.diagnosticsView,
+                        codeEditorView: this.codeEditorView,
                     }),
             ),
         ]
     }
 }
 
-type ModeConsole = 'journal' | 'test'
+type ModeConsole = 'journal' | 'test' | 'diagnostics'
 const iconsHeader: Record<ModeConsole, string> = {
     journal: 'fa-newspaper ',
     test: 'fa-check',
+    diagnostics: 'fa-heartbeat',
 }
 
 class IconHeaderConsole {
@@ -105,40 +168,55 @@ class HeaderConsole {
     public readonly class = 'd-flex justify-content-center'
     public readonly children: VirtualDOM[]
     public readonly mode$: BehaviorSubject<ModeConsole>
+    public readonly types: ModeConsole[]
 
-    constructor(params: { mode$: Subject<ModeConsole> }) {
+    constructor(params: { mode$: Subject<ModeConsole>; types: ModeConsole[] }) {
         Object.assign(this, params)
-        this.children = [
-            new IconHeaderConsole({ target: 'journal', mode$: this.mode$ }),
-            new IconHeaderConsole({ target: 'test', mode$: this.mode$ }),
-        ]
+        this.children = this.types.map(
+            (type) =>
+                new IconHeaderConsole({ target: type, mode$: this.mode$ }),
+        )
     }
 }
 
 type Executor = (
     source: string,
     debug: (title: string, data: Displayable) => void,
-) => Displayable | Promise<Displayable>
+) =>
+    | Displayable
+    | Promise<Displayable>
+    | Observable<Displayable>
+    | InterpretError
 
 class ConsoleView {
-    public readonly class = 'w-50 h-100 px-2 d-flex flex-column'
+    public readonly class: Stream$<SplitMode, string>
     public readonly src: string
     public readonly testSrc: string
     public readonly log$: ReplaySubject<Log>
     public readonly children: VirtualDOM[]
     public readonly mode$: Subject<ModeConsole>
+    public readonly splitMode$: Observable<SplitMode>
     public readonly toDisplayable?: (obj: unknown) => Displayable
     public readonly executor: Executor
+    public readonly diagnosticsView?: (editor: CodeEditorView) => VirtualDOM
+    public readonly codeEditorView: CodeEditorView
 
     constructor(params: {
         src: string
+        splitMode$: Observable<SplitMode>
         mode$: Subject<ModeConsole>
         testSrc: string
         executor: Executor
         toDisplayable?: (obj: unknown) => Displayable
+        diagnosticsView?: (editor: CodeEditorView) => VirtualDOM
+        codeEditorView: CodeEditorView
     }) {
         Object.assign(this, params)
-
+        this.class = attr$(this.splitMode$, (mode) =>
+            mode == 'code-only'
+                ? 'd-none'
+                : 'w-100 h-100 px-2 d-flex flex-column',
+        )
         this.log$ = new ReplaySubject()
 
         const debug = (title: string, data: Displayable) => {
@@ -147,41 +225,75 @@ class ConsoleView {
         }
 
         const executed = this.executor(this.src, debug)
-
-        const output$ =
-            executed instanceof Promise ? from(executed) : of(executed)
-
+        let output$
+        if (executed instanceof Observable) {
+            console.log('Observable')
+            output$ = executed
+        } else {
+            output$ =
+                executed instanceof Promise ? from(executed) : of(executed)
+        }
+        const defaultModes: ModeConsole[] = ['journal', 'test']
         this.children = [
             child$(output$, (output) => {
                 if (output instanceof InterpretError)
                     return {
                         class: 'fas fa-bug fv-text-error w-100 text-center',
                     }
-                return new HeaderConsole({ mode$: this.mode$ })
+                return new HeaderConsole({
+                    mode$: this.mode$,
+                    types: defaultModes.concat(
+                        this.diagnosticsView ? ['diagnostics'] : [],
+                    ),
+                })
             }),
-            child$(
-                combineLatest([this.mode$, output$]),
-                ([mode, output]: [mode: ModeConsole, output: Displayable]) => {
-                    if (output instanceof InterpretError) {
-                        return new ErrorsView({ error: output })
-                    }
-                    if (mode == 'journal') {
-                        this.log$.next({
-                            title: 'output',
-                            data: this.toDisplayable
-                                ? this.toDisplayable(output)
-                                : output,
-                        })
-                        return new JournalView({ log$: this.log$ })
-                    }
-                    if (mode == 'test') {
-                        return new TestView({
-                            testSrc: this.testSrc,
-                            output,
-                        })
-                    }
-                },
-            ),
+            child$(output$, (output: Displayable) => {
+                this.log$.next({
+                    title: 'output',
+                    data: this.toDisplayable
+                        ? this.toDisplayable(output)
+                        : output,
+                })
+
+                if (output instanceof InterpretError) {
+                    return new ErrorsView({ error: output })
+                }
+                return {
+                    class: 'flex-grow-1',
+                    style: { minHeight: '0' },
+                    children: [
+                        {
+                            class: attr$(this.mode$, (mode) =>
+                                mode == 'journal' ? 'h-100' : 'd-none',
+                            ),
+                            children: [new JournalView({ log$: this.log$ })],
+                        },
+                        {
+                            class: attr$(this.mode$, (mode) =>
+                                mode == 'test' ? 'h-100' : 'd-none',
+                            ),
+                            children: [
+                                new TestView({
+                                    testSrc: this.testSrc,
+                                    output,
+                                }),
+                            ],
+                        },
+                        this.diagnosticsView
+                            ? {
+                                  class: attr$(this.mode$, (mode) =>
+                                      mode == 'diagnostics'
+                                          ? 'h-100'
+                                          : 'd-none',
+                                  ),
+                                  children: [
+                                      this.diagnosticsView(this.codeEditorView),
+                                  ],
+                              }
+                            : undefined,
+                    ],
+                }
+            }),
         ]
     }
 }
