@@ -3,7 +3,7 @@ import { AppState, componentFactoryBase } from './utils'
 import { renderTypeScript } from './runner/typescript/renderer'
 
 const defaultExeSrc = `
-return async ({debug}) => {
+return async ({debug}: {debug:(title:string,obj:unknown)=>void}) => {
     
     class TsObject{
     
