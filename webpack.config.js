@@ -62,6 +62,7 @@ module.exports = {
         '@youwol/flux-view': '@youwol/flux-view',
         grapesjs: 'grapesjs',
         codemirror: 'CodeMirror',
+        typescript: 'ts',
         '@youwol/fv-tree': '@youwol/fv-tree',
         '@youwol/fv-group': '@youwol/fv-group',
     },
