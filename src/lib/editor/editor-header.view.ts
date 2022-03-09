@@ -18,7 +18,7 @@ export class HeaderView {
                 children: [
                     {
                         tag: 'i',
-                        class: 'fv-pointer rounded m-1 fas fa-play fv-hover-text-focus',
+                        class: 'fv-pointer rounded m-1 fas fa-save fv-hover-text-focus',
                         onclick: () => this.run$.next(true),
                     },
                 ],
