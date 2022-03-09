@@ -1,5 +1,5 @@
 import * as grapesjs from 'grapesjs'
-import { componentFactoryBase } from './utils'
+import { AppState, componentFactoryBase } from './utils'
 import { renderTypeScript } from './runner/typescript/renderer'
 
 const defaultExeSrc = `
@@ -26,17 +26,30 @@ return async (result, {expect}) => {
     return true
 }`
 
-export function addTypescriptComponent(editor: grapesjs.Editor) {
+export function addTypescriptComponent(
+    appState: AppState,
+    editor: grapesjs.Editor,
+) {
     const componentType = 'typescript-playground'
     editor.DomComponents.addType(
         componentType,
         componentFactoryBase({
+            appState,
             componentType,
-            language: 'typescript',
+            language: 'text/typescript',
             grapesEditor: editor,
             canvasRendering: renderTypeScript,
             defaultExeSrc: defaultExeSrc,
             defaultTestSrc: defaultTestSrc,
+            codeEditorRequirements: {
+                scripts: [
+                    'codemirror#5.52.0~mode/javascript.min.js',
+                    'codemirror#5.52.0~mode/css.min.js',
+                    'codemirror#5.52.0~mode/xml.min.js',
+                    'codemirror#5.52.0~mode/htmlmixed.min.js',
+                ],
+                css: [],
+            },
         }),
     )
 }

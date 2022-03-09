@@ -6,6 +6,7 @@ import CodeMirror from 'codemirror'
 import { HeaderView } from './editor-header.view'
 
 import * as grapesjs from 'grapesjs'
+import { AppState } from '../utils'
 
 const codeMirrorBaseConfiguration = {
     lineNumbers: true,
@@ -70,7 +71,6 @@ export class CodeEditorView implements VirtualDOM {
     }
     public readonly configurationCodeMirror = {
         value: '',
-        mode: 'markdown',
         lineNumbers: true,
         theme: 'blackboard',
         lineWrapping: true,
@@ -131,27 +131,31 @@ export function popupModal({ editorView }: { editorView: VirtualDOM }) {
     document.querySelector('body').appendChild(modalDiv)
 }
 
-export function editCode(srcAttName, editor: grapesjs.Editor, mode: string) {
+export function editCode(
+    srcAttName,
+    appState: AppState,
+    editor: grapesjs.Editor,
+    mode: string,
+    requirements,
+) {
     const component = editor.getSelected()
-
+    if (!component.getAttributes().src) {
+        component.addAttributes({ src: '# Title' })
+    }
     const src$ = new BehaviorSubject<string>(
         component.getAttributes()[srcAttName],
     )
-    const state = new CodeEditorState({
-        codeMirrorConfiguration: { ...codeMirrorBaseConfiguration, mode },
+    appState.editCode({
+        headerView: (editorState) => {
+            const headerView = new HeaderView({ state: editorState })
+            headerView.run$.pipe(withLatestFrom(src$)).subscribe(([_, src]) => {
+                component && component.addAttributes({ [srcAttName]: src })
+                component.view.render()
+            })
+            return headerView
+        },
         content$: src$,
-    })
-
-    const headerView = new HeaderView({ state })
-    const editorView = new CodeEditorView({
-        state,
-        content$: src$,
-        headerView,
-    })
-    popupModal({ editorView })
-    headerView.run$.pipe(withLatestFrom(src$)).subscribe(([_, src]) => {
-        component && component.addAttributes({ [srcAttName]: src })
-        console.log('Save attr', component)
-        component.view.render()
+        configuration: { ...codeMirrorBaseConfiguration, mode },
+        requirements,
     })
 }

@@ -1,5 +1,5 @@
 import * as grapesjs from 'grapesjs'
-import { componentFactoryBase } from './utils'
+import { AppState, componentFactoryBase } from './utils'
 
 import { renderPython } from './runner/python/renderer'
 
@@ -29,15 +29,23 @@ def test(result, expect) => {
 test
 `
 
-export function addPythonComponent(editor: grapesjs.Editor) {
+export function addPythonComponent(
+    appState: AppState,
+    editor: grapesjs.Editor,
+) {
     const componentType = 'python-playground'
     let base = componentFactoryBase({
+        appState,
         componentType,
         language: 'python',
         grapesEditor: editor,
         canvasRendering: renderPython,
         defaultExeSrc: defaultExeSrc,
         defaultTestSrc: defaultTestSrc,
+        codeEditorRequirements: {
+            scripts: ['codemirror#5.52.0~mode/python.min.js'],
+            css: [],
+        },
     })
     const packages = ['numpy', 'pandas', 'scikit-learn']
     packages.forEach((name) => {
@@ -54,6 +62,9 @@ export function addPythonComponent(editor: grapesjs.Editor) {
             this.on(`change:attributes:${name}`, () => {
                 this.view.render()
             })
+        })
+        this.on(`change:attributes:default-mode`, () => {
+            this.view.render()
         })
     }
     editor.DomComponents.addType(componentType, base)

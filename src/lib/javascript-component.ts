@@ -1,5 +1,5 @@
 import * as grapesjs from 'grapesjs'
-import { componentFactoryBase } from './utils'
+import { AppState, componentFactoryBase } from './utils'
 import { renderJavaScript } from './runner/javascript/renderer'
 
 const defaultExeSrc = `
@@ -24,17 +24,30 @@ return async (result, {expect}) => {
     return true
 }`
 
-export function addJavascriptComponent(editor: grapesjs.Editor) {
+export function addJavascriptComponent(
+    appState: AppState,
+    editor: grapesjs.Editor,
+) {
     const componentType = 'javascript-playground'
     editor.DomComponents.addType(
         componentType,
         componentFactoryBase({
+            appState,
             componentType,
             language: 'javascript',
             grapesEditor: editor,
             canvasRendering: renderJavaScript,
             defaultExeSrc: defaultExeSrc,
             defaultTestSrc: defaultTestSrc,
+            codeEditorRequirements: {
+                scripts: [
+                    'codemirror#5.52.0~mode/javascript.min.js',
+                    'codemirror#5.52.0~mode/css.min.js',
+                    'codemirror#5.52.0~mode/xml.min.js',
+                    'codemirror#5.52.0~mode/htmlmixed.min.js',
+                ],
+                css: [],
+            },
         }),
     )
 }

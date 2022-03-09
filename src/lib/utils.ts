@@ -3,15 +3,19 @@ import * as grapesjs from 'grapesjs'
 import { editCode } from './editor'
 
 export function editSrcTrait({
+    appState,
     attributeName,
     src,
     language,
     grapesEditor,
+    requirements,
 }: {
+    appState: AppState
     attributeName: string
     src: string
     language: string
     grapesEditor
+    requirements
 }) {
     return {
         name: 'editSrc',
@@ -26,7 +30,13 @@ export function editSrcTrait({
                     [attributeName]: src,
                 })
             }
-            editCode(attributeName, grapesEditor, language)
+            editCode(
+                attributeName,
+                appState,
+                grapesEditor,
+                language,
+                requirements,
+            )
         },
     }
 }
@@ -48,19 +58,23 @@ export function baseAttributes(componentType, defaultExeSrc, defaultTestSrc) {
 }
 
 export function componentFactoryBase({
+    appState,
     componentType,
     language,
     grapesEditor,
     canvasRendering,
     defaultExeSrc,
     defaultTestSrc,
+    codeEditorRequirements,
 }: {
+    appState: AppState
     componentType: string
     language: string
     grapesEditor: grapesjs.Editor
     defaultExeSrc: string
     defaultTestSrc: string
     canvasRendering: () => void
+    codeEditorRequirements
 }) {
     return {
         extendFn: ['initialize'],
@@ -81,16 +95,20 @@ export function componentFactoryBase({
                 },
                 traits: [
                     editSrcTrait({
+                        appState,
                         attributeName: 'src',
                         src: defaultExeSrc,
                         language,
                         grapesEditor,
+                        requirements: codeEditorRequirements,
                     }),
                     editSrcTrait({
+                        appState,
                         attributeName: 'src-test',
                         src: defaultTestSrc,
                         language,
                         grapesEditor,
+                        requirements: codeEditorRequirements,
                     }),
                 ] as Record<string, unknown>[],
             },
@@ -99,4 +117,8 @@ export function componentFactoryBase({
             },
         },
     }
+}
+
+export interface AppState {
+    editCode({ headerView, content$, configuration, requirements })
 }
