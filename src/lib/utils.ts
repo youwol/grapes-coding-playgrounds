@@ -110,10 +110,22 @@ export function componentFactoryBase({
                         grapesEditor,
                         requirements: codeEditorRequirements,
                     }),
+                    {
+                        type: 'select', // Type of the trait
+                        label: 'Default mode', // The label you will see in Settings
+                        name: 'default-mode', // The name of the attribute/property to use on component
+                        options: [
+                            { id: 'split', name: 'code & output' },
+                            { id: 'code-only', name: 'code only' },
+                            { id: 'output-only', name: 'output only' },
+                        ],
+                    },
                 ] as Record<string, unknown>[],
             },
             initialize() {
-                /*no op for now*/
+                this.on(`change:attributes:default-mode`, () => {
+                    this.view.render()
+                })
             },
         },
     }
