@@ -1,27 +1,32 @@
 /**
- * https://discuss.codemirror.net/t/codemirror-6-and-typescript-lsp/3398/2
  * https://www.npmjs.com/package/@typescript/vfs
+ * https://www.typescriptlang.org/dev/sandbox/
  */
 import { render } from '@youwol/flux-view'
-import { Displayable, PlaygroundView } from '../common'
-import { ModuleKind, transpileModule } from 'typescript'
+import { Displayable, PlaygroundView, SplitMode } from '../common'
 import { runJavascriptCode } from '../utils'
+import * as ts from 'typescript'
+import { TsCodeEditorView } from './ts-code-editor.view'
 
 export function renderElement(element: HTMLElement) {
     const vDOM = new PlaygroundView({
-        startingSrc: element.getAttribute('src'),
+        splitMode:
+            (element.getAttribute('default-mode') as SplitMode) || 'split',
         testSrc: element.getAttribute('src-test'),
-        language: 'text/typescript',
+        codeEditorView: new TsCodeEditorView({
+            src: element.getAttribute('src'),
+        }),
         executor: (
             source: string,
             debug: (title: string, data: Displayable) => void,
         ) => {
-            let result = transpileModule(source, {
-                compilerOptions: { module: ModuleKind.CommonJS },
-            })
+            const compilerOpts = {
+                module: ts.ModuleKind.CommonJS,
+                reportDiagnostics: true,
+            }
+            let result = ts.transpileModule(source, compilerOpts)
             return runJavascriptCode(result.outputText, debug)
         },
     })
-
     element.appendChild(render(vDOM))
 }

@@ -11,11 +11,15 @@ export function renderTypeScript() {
     let promise = cdnClient
         .install(
             {
-                modules: ['@youwol/fv-tree', 'codemirror'],
-                scripts: ['codemirror#5.52.0~mode/javascript.min.js'],
+                modules: ['@youwol/fv-tree', 'codemirror', 'typescript'],
+                scripts: [
+                    'codemirror#5.52.0~mode/javascript.min.js',
+                    'codemirror#5.52.0~addons/lint/lint.js',
+                ],
                 css: [
                     'codemirror#5.52.0~codemirror.min.css',
                     'codemirror#5.52.0~theme/blackboard.min.css',
+                    'codemirror#5.52.0~addons/lint/lint.css',
                 ],
             },
             { displayLoadingScreen: this },
