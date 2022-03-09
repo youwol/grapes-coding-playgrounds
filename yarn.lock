@@ -552,6 +552,11 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
+"@pyodide/pyodide@0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@pyodide/pyodide/-/pyodide-0.17.1.tgz#823b2122752e4b073ba7a27cef8217fa125e3491"
+  integrity sha512-VCeLGQ9NpydiVNUiTWexZEfErQqqo0I8050p5uTxHRlmI4jA1cXt0WOR3pq5WjOCtApkCCT4qV1per1nMOYoFw==
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
@@ -816,6 +821,13 @@
   dependencies:
     "@typescript-eslint/types" "5.12.0"
     eslint-visitor-keys "^3.0.0"
+
+"@typescript/vfs@^1.3.5":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@typescript/vfs/-/vfs-1.3.5.tgz#801e3c97b5beca4ff5b8763299ca5fd605b862b8"
+  integrity sha512-pI8Saqjupf9MfLw7w2+og+fmb0fZS0J6vsKXXrp4/PDXEFvntgzXmChCXC/KefZZS0YGS6AT8e0hGAJcTsdJlg==
+  dependencies:
+    debug "^4.1.1"
 
 "@webassemblyjs/ast@1.11.0":
   version "1.11.0"
