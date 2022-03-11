@@ -15,7 +15,6 @@ export class TestView {
         Object.assign(this, params)
         this.expect$ = new ReplaySubject()
         const expect = (title, validated) => {
-            console.log('Expect', { title, validated })
             this.expect$.next({ title, validated })
         }
         try {
