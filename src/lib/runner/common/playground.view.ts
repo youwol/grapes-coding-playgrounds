@@ -89,7 +89,9 @@ export class PlaygroundView {
             child$(this.splitMode$, (mode) =>
                 mode != 'output-only'
                     ? {
-                          class: 'h-100 w-100 d-flex flex-column',
+                          class: `h-100 d-flex flex-column ${
+                              mode == 'split' ? 'w-50' : 'w-100'
+                          }`,
                           children: [
                               {
                                   class: 'w-100 d-flex justify-content-center',
@@ -212,11 +214,14 @@ class ConsoleView {
         codeEditorView: CodeEditorView
     }) {
         Object.assign(this, params)
-        this.class = attr$(this.splitMode$, (mode) =>
-            mode == 'code-only'
-                ? 'd-none'
-                : 'w-100 h-100 px-2 d-flex flex-column',
-        )
+        this.class = attr$(this.splitMode$, (mode) => {
+            let base = 'h-100 px-2 d-flex flex-column'
+            return {
+                'code-only': 'd-none',
+                split: `w-50 ${base}`,
+                'output-only': `w-100 ${base}`,
+            }[mode]
+        })
         this.log$ = new ReplaySubject()
 
         const debug = (title: string, data: Displayable) => {
