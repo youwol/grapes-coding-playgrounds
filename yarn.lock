@@ -977,25 +977,25 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@youwol/cdn-client@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@youwol/cdn-client/-/cdn-client-0.0.12.tgz#95994a09330bfb8ce0b2cda1d6817a429295e61d"
-  integrity sha512-r1EnL6AUcbsJbUfYUKFOrk/IbBDyTzDt2SXHlCvn6ZTdwL4zv6CtlMJS+zO/sc8ofxopPaR7aiks1JVze6qEKg==
+"@youwol/cdn-client@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@youwol/cdn-client/-/cdn-client-0.1.0.tgz#c754b889ee045159c1b6408d424b569d82f33da9"
+  integrity sha512-FAEklULf4PkDay6XXRhJKWcBeTV5yfwKmcaJrOiUcumd1bHsimBjhnAClRaUqSmflO2GnxXs/aIXSpax7hgn6Q==
 
-"@youwol/flux-view@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@youwol/flux-view/-/flux-view-0.0.12.tgz#f85ab96bae1dd5a89168febafa6db00795de89e0"
-  integrity sha512-aSUohCOpR8AWNCslzYqCTCiljt4jyoIwxE71d9yu+PUv/+KG2U587E4TNFp+uhGyQYvhvgS4DKZPqIYPrXqgrg==
+"@youwol/flux-view@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@youwol/flux-view/-/flux-view-0.1.0.tgz#a162a855dcdfbb0adce135ec81bb3d6c0bcbb43b"
+  integrity sha512-WOGHTU9c1+zRHBDBgEIQLYcX3syKpDyrzmEJr/a1iiuMYV+6VzJ12+ZJqaVbWIwHh6HybtFmOES3wU70GcS8VQ==
 
-"@youwol/fv-group@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@youwol/fv-group/-/fv-group-0.0.6.tgz#b4d1af00cdc2b27e8665dbfee0e392efeb80e072"
-  integrity sha512-ErHRz+p8ZUMUxIPN+Hc5YusZNuTt3Ycmaidvbr8fNaHCyeFENlf9qXdQvJA6JGnGUTOu1VeK4ae+GiXfkPct2w==
+"@youwol/fv-group@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@youwol/fv-group/-/fv-group-0.1.0.tgz#5466e401d8007929afeb9e67d3eef4ba9760182b"
+  integrity sha512-hE3vD++DKD+vIY3w7f8Jg/mQ8aYV7o8OQAIw6Mp4Bj2EFwGr9oihC3cV8L62fJnQNRq/o/F7ygU+85okw5DfNg==
 
-"@youwol/fv-tree@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@youwol/fv-tree/-/fv-tree-0.0.5.tgz#743322d6c2ea4fff73b0be5ddcfa45c46c4f4ce1"
-  integrity sha512-4U2z8wzC9wdHcI+Adf6QkWCUo7v7J+QIlW+eDc4eYbEWOvIZq78NspLBqDZngnPBVHBZY/Ty84+EKJRpLAW7FQ==
+"@youwol/fv-tree@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@youwol/fv-tree/-/fv-tree-0.1.0.tgz#04b57164195288f1a556efb9e38f3f10b39fc96d"
+  integrity sha512-8cfunjjd+vIQYjgCUt/qJO57nBg5y3cXYNRpUHq05yLWH0ALDM2u8/HvEBdaQtQQL96zYCFJRpo28YdsKTMEQA==
 
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.5"
