@@ -992,10 +992,10 @@
   resolved "https://registry.yarnpkg.com/@youwol/fv-group/-/fv-group-0.1.0.tgz#5466e401d8007929afeb9e67d3eef4ba9760182b"
   integrity sha512-hE3vD++DKD+vIY3w7f8Jg/mQ8aYV7o8OQAIw6Mp4Bj2EFwGr9oihC3cV8L62fJnQNRq/o/F7ygU+85okw5DfNg==
 
-"@youwol/fv-tree@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@youwol/fv-tree/-/fv-tree-0.1.0.tgz#04b57164195288f1a556efb9e38f3f10b39fc96d"
-  integrity sha512-8cfunjjd+vIQYjgCUt/qJO57nBg5y3cXYNRpUHq05yLWH0ALDM2u8/HvEBdaQtQQL96zYCFJRpo28YdsKTMEQA==
+"@youwol/fv-tree@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@youwol/fv-tree/-/fv-tree-0.1.1.tgz#64f5b5e2f8f84c53a0158f9bc95a273310c09ff0"
+  integrity sha512-kCdOQBgsF98rIpeMHsCeS9t6Orz5hTdeREI9ATlBRjh7QBfvoXlyLjEhzDgqRqEs9oHxuUY8/HfdY+cO5uXjSg==
 
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.5"

@@ -31,7 +31,7 @@
     "grapesjs": "0.x",
     "@youwol/fv-group": "^0.1.0",
     "@youwol/flux-view": "^0.1.0",
-    "@youwol/fv-tree": "^0.1.0",
+    "@youwol/fv-tree": "^0.1.1",
     "@youwol/cdn-client": "^0.1.0",
     "@pyodide/pyodide": "0.17.1",
     "rxjs": "6.x",
