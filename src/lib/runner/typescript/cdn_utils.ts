@@ -1,6 +1,6 @@
 import * as ts from 'typescript'
 import { ScriptTarget } from 'typescript'
-import { fetchSource, getAssetId } from '@youwol/cdn-client'
+import { fetchSource, getUrlBase } from '@youwol/cdn-client'
 
 export function createDefaultMapFromCDN(
     options: ts.CompilerOptions,
@@ -89,14 +89,12 @@ export function createDefaultMapFromCDN(
     const promises = [...base, ...es]
         .map((filename) => [
             filename,
-            `${getAssetId('typescript')}/${version}/lib/${filename}`,
+            `${getUrlBase('typescript', version)}/lib/${filename}`,
         ])
         .map(([filename, url]) =>
-            fetchSource('typescript', getAssetId('typescript'), url).then(
-                ({ content }) => {
-                    fsMap.set(`/${filename}`, content)
-                },
-            ),
+            fetchSource({ name: filename, url }).then(({ content }) => {
+                fsMap.set(`/${filename}`, content)
+            }),
         )
     return Promise.all(promises).then(() => fsMap)
 }
