@@ -29,10 +29,10 @@
     "@typescript-eslint/parser": "^5.0.0",
     "@types/codemirror": "^5.60.5",
     "grapesjs": "0.x",
-    "@youwol/fv-group": "^0.0.6",
-    "@youwol/flux-view": "^0.0.12",
-    "@youwol/fv-tree": "^0.0.5",
-    "@youwol/cdn-client": "^0.0.12",
+    "@youwol/fv-group": "^0.1.0",
+    "@youwol/flux-view": "^0.1.0",
+    "@youwol/fv-tree": "^0.1.0",
+    "@youwol/cdn-client": "^0.1.0",
     "@pyodide/pyodide": "0.17.1",
     "rxjs": "6.x",
     "eslint": "7.23.0",
@@ -64,8 +64,8 @@
     },
     "cdnDependencies": {
       "codemirror": "5.x",
-      "@youwol/fv-group": "^0.0.6",
-      "@youwol/cdn-client": "^0.0.12"
+      "@youwol/fv-group": "^0.1.0",
+      "@youwol/cdn-client": "^0.1.0"
     }
   },
   "prettier": {
