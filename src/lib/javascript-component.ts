@@ -1,6 +1,7 @@
 import * as grapesjs from 'grapesjs'
-import { AppState, componentFactoryBase } from './utils'
+import { AppState, Component } from './utils'
 import { renderJavaScript } from './runner/javascript/renderer'
+import { JsPlaygroundBlockName, JsPlaygroundComponentName } from './constants'
 
 const defaultExeSrc = `
 return async ({debug}) => {
@@ -23,19 +24,17 @@ return async (result, {expect}) => {
     expect("A dummy passing test", true)
     return true
 }`
-
-export function addJavascriptComponent(
-    appState: AppState,
-    editor: grapesjs.Editor,
-) {
-    const componentType = 'javascript-playground'
-    editor.DomComponents.addType(
-        componentType,
-        componentFactoryBase({
-            appState,
-            componentType,
+export class JsPlaygroundComponent extends Component {
+    constructor(params: {
+        appState: AppState
+        grapesEditor: grapesjs.Editor
+        idFactory: (string) => string
+    }) {
+        super({
+            appState: params.appState,
+            componentType: JsPlaygroundComponentName,
             language: 'javascript',
-            grapesEditor: editor,
+            grapesEditor: params.grapesEditor,
             canvasRendering: renderJavaScript,
             defaultExeSrc: defaultExeSrc,
             defaultTestSrc: defaultTestSrc,
@@ -48,6 +47,31 @@ export function addJavascriptComponent(
                 ],
                 css: [],
             },
-        }),
-    )
+            idFactory: params.idFactory,
+        })
+    }
+}
+
+export class JsPlaygroundBlock {
+    public readonly blockType: string
+    public readonly label = 'Javascript Playground'
+    public readonly content
+    public readonly appState: AppState
+    public readonly grapesEditor: grapesjs.Editor
+    public readonly idFactory: (name: string) => string
+    public readonly render = ({ el }: { el: HTMLElement }) => {
+        el.classList.add('gjs-fonts', 'gjs-f-b2')
+    }
+
+    constructor(params: {
+        appState: AppState
+        grapesEditor: grapesjs.Editor
+        idFactory: (name: string) => string
+    }) {
+        Object.assign(this, params)
+        this.blockType = this.idFactory(JsPlaygroundBlockName)
+        this.content = {
+            type: this.idFactory(JsPlaygroundComponentName),
+        }
+    }
 }

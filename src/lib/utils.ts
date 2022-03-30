@@ -41,47 +41,49 @@ export function editSrcTrait({
     }
 }
 
-export function isComponent(componentType: string) {
-    return (el: HTMLElement) => {
+export class Component {
+    public readonly appState: AppState
+    public readonly grapesEditor: grapesjs.Editor
+    public readonly language: string
+    public readonly defaultExeSrc: string
+    public readonly defaultTestSrc: string
+    public readonly canvasRendering: () => void
+    public readonly codeEditorRequirements
+    public readonly idFactory: (name: string) => string
+
+    public readonly componentType: string
+
+    public readonly extendFn = ['initialize']
+    public readonly isComponent = (el: HTMLElement) => {
         return (
-            el.getAttribute && el.getAttribute('componentType') == componentType
+            el.getAttribute &&
+            el.getAttribute('componentType') == this.componentType
         )
     }
-}
+    public readonly model
+    public readonly view
 
-export function baseAttributes(componentType, defaultExeSrc, defaultTestSrc) {
-    return {
-        componentType,
-        src: defaultExeSrc,
-        'src-test': defaultTestSrc,
+    constructor(params: {
+        appState: AppState
+        componentType: string
+        language: string
+        grapesEditor: grapesjs.Editor
+        defaultExeSrc: string
+        defaultTestSrc: string
+        canvasRendering: () => void
+        codeEditorRequirements
+        idFactory: (name: string) => string
+    }) {
+        Object.assign(this, params)
+        this.componentType = this.idFactory(this.componentType)
+
+        this.model = this.getModel()
     }
-}
 
-export function componentFactoryBase({
-    appState,
-    componentType,
-    language,
-    grapesEditor,
-    canvasRendering,
-    defaultExeSrc,
-    defaultTestSrc,
-    codeEditorRequirements,
-}: {
-    appState: AppState
-    componentType: string
-    language: string
-    grapesEditor: grapesjs.Editor
-    defaultExeSrc: string
-    defaultTestSrc: string
-    canvasRendering: () => void
-    codeEditorRequirements
-}) {
-    return {
-        extendFn: ['initialize'],
-        isComponent: isComponent(componentType),
-        model: {
+    getModel() {
+        return {
             defaults: {
-                script: canvasRendering,
+                script: this.canvasRendering,
                 style: {
                     'max-height': '100%',
                     height: '500px',
@@ -89,26 +91,26 @@ export function componentFactoryBase({
                 styles: '.CodeMirror {height: 100% !important;}',
                 droppable: false,
                 attributes: {
-                    componentType,
-                    src: defaultExeSrc,
-                    'src-test': defaultTestSrc,
+                    componentType: this.componentType,
+                    src: this.defaultExeSrc,
+                    'src-test': this.defaultTestSrc,
                 },
                 traits: [
                     editSrcTrait({
-                        appState,
+                        appState: this.appState,
                         attributeName: 'src',
-                        src: defaultExeSrc,
-                        language,
-                        grapesEditor,
-                        requirements: codeEditorRequirements,
+                        src: this.defaultExeSrc,
+                        language: this.language,
+                        grapesEditor: this.grapesEditor,
+                        requirements: this.codeEditorRequirements,
                     }),
                     editSrcTrait({
-                        appState,
+                        appState: this.appState,
                         attributeName: 'src-test',
-                        src: defaultTestSrc,
-                        language,
-                        grapesEditor,
-                        requirements: codeEditorRequirements,
+                        src: this.defaultTestSrc,
+                        language: this.language,
+                        grapesEditor: this.grapesEditor,
+                        requirements: this.codeEditorRequirements,
                     }),
                     {
                         type: 'select', // Type of the trait
@@ -127,7 +129,7 @@ export function componentFactoryBase({
                     this.view.render()
                 })
             },
-        },
+        }
     }
 }
 

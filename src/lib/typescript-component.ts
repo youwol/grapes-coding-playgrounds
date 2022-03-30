@@ -1,6 +1,7 @@
 import * as grapesjs from 'grapesjs'
-import { AppState, componentFactoryBase } from './utils'
+import { AppState, Component } from './utils'
 import { renderTypeScript } from './runner/typescript/renderer'
+import { TsPlaygroundBlockName, TsPlaygroundComponentName } from './constants'
 
 const defaultExeSrc = `
 return async ({debug}: {debug:(title:string,obj:unknown)=>void}) => {
@@ -26,18 +27,17 @@ return async (result, {expect}) => {
     return true
 }`
 
-export function addTypescriptComponent(
-    appState: AppState,
-    editor: grapesjs.Editor,
-) {
-    const componentType = 'typescript-playground'
-    editor.DomComponents.addType(
-        componentType,
-        componentFactoryBase({
-            appState,
-            componentType,
+export class TsPlaygroundComponent extends Component {
+    constructor(params: {
+        appState: AppState
+        grapesEditor: grapesjs.Editor
+        idFactory: (string) => string
+    }) {
+        super({
+            appState: params.appState,
+            componentType: TsPlaygroundComponentName,
             language: 'text/typescript',
-            grapesEditor: editor,
+            grapesEditor: params.grapesEditor,
             canvasRendering: renderTypeScript,
             defaultExeSrc: defaultExeSrc,
             defaultTestSrc: defaultTestSrc,
@@ -50,6 +50,31 @@ export function addTypescriptComponent(
                 ],
                 css: [],
             },
-        }),
-    )
+            idFactory: params.idFactory,
+        })
+    }
+}
+
+export class TsPlaygroundBlock {
+    public readonly blockType: string
+    public readonly label = 'Typescript Playground'
+    public readonly content
+    public readonly appState: AppState
+    public readonly grapesEditor: grapesjs.Editor
+    public readonly idFactory: (name: string) => string
+    public readonly render = ({ el }: { el: HTMLElement }) => {
+        el.classList.add('gjs-fonts', 'gjs-f-b2')
+    }
+
+    constructor(params: {
+        appState: AppState
+        grapesEditor: grapesjs.Editor
+        idFactory: (name: string) => string
+    }) {
+        Object.assign(this, params)
+        this.blockType = this.idFactory(TsPlaygroundBlockName)
+        this.content = {
+            type: this.idFactory(TsPlaygroundComponentName),
+        }
+    }
 }

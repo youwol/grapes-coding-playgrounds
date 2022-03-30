@@ -1,7 +1,11 @@
 import * as grapesjs from 'grapesjs'
-import { AppState, componentFactoryBase } from './utils'
+import { AppState, Component } from './utils'
 
 import { renderPython } from './runner/python/renderer'
+import {
+    PythonPlaygroundBlockName,
+    PythonPlaygroundComponentName,
+} from './constants'
 
 const defaultExeSrc = `
 import sys
@@ -29,43 +33,68 @@ def test(result, expect) => {
 test
 `
 
-export function addPythonComponent(
-    appState: AppState,
-    editor: grapesjs.Editor,
-) {
-    const componentType = 'python-playground'
-    let base = componentFactoryBase({
-        appState,
-        componentType,
-        language: 'python',
-        grapesEditor: editor,
-        canvasRendering: renderPython,
-        defaultExeSrc: defaultExeSrc,
-        defaultTestSrc: defaultTestSrc,
-        codeEditorRequirements: {
-            scripts: ['codemirror#5.52.0~mode/python.min.js'],
-            css: [],
-        },
-    })
-    const packages = ['numpy', 'pandas', 'scikit-learn']
-    packages.forEach((name) => {
-        base.model.defaults.traits.push({
-            type: 'checkbox',
-            name,
-            label: name,
-            value: false,
+export class PythonPlaygroundComponent extends Component {
+    constructor(params: {
+        appState: AppState
+        grapesEditor: grapesjs.Editor
+        idFactory: (string) => string
+    }) {
+        super({
+            appState: params.appState,
+            componentType: PythonPlaygroundComponentName,
+            language: 'python',
+            grapesEditor: params.grapesEditor,
+            canvasRendering: renderPython,
+            defaultExeSrc: defaultExeSrc,
+            defaultTestSrc: defaultTestSrc,
+            codeEditorRequirements: {
+                scripts: ['codemirror#5.52.0~mode/python.min.js'],
+                css: [],
+            },
+            idFactory: params.idFactory,
         })
-    })
-
-    base.model.initialize = function () {
+        const packages = ['numpy', 'pandas', 'scikit-learn']
         packages.forEach((name) => {
-            this.on(`change:attributes:${name}`, () => {
-                this.view.render()
+            this.model.defaults.traits.push({
+                type: 'checkbox',
+                name,
+                label: name,
+                value: false,
             })
         })
-        this.on(`change:attributes:default-mode`, () => {
-            this.view.render()
-        })
+        this.model.initialize = function () {
+            packages.forEach((name) => {
+                this.on(`change:attributes:${name}`, () => {
+                    this.view.render()
+                })
+            })
+            this.on(`change:attributes:default-mode`, () => {
+                this.view.render()
+            })
+        }
     }
-    editor.DomComponents.addType(componentType, base)
+}
+
+export class PythonPlaygroundBlock {
+    public readonly blockType: string
+    public readonly label = 'Python Playground'
+    public readonly content
+    public readonly appState: AppState
+    public readonly grapesEditor: grapesjs.Editor
+    public readonly idFactory: (name: string) => string
+    public readonly render = ({ el }: { el: HTMLElement }) => {
+        el.classList.add('gjs-fonts', 'gjs-f-b2')
+    }
+
+    constructor(params: {
+        appState: AppState
+        grapesEditor: grapesjs.Editor
+        idFactory: (name: string) => string
+    }) {
+        Object.assign(this, params)
+        this.blockType = this.idFactory(PythonPlaygroundBlockName)
+        this.content = {
+            type: this.idFactory(PythonPlaygroundComponentName),
+        }
+    }
 }
