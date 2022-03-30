@@ -29,6 +29,7 @@ module.exports = {
         libraryTarget: 'umd',
         umdNamedDefine: true,
         library: '[name]',
+        devtoolNamespace: packageJson.name,
         filename: '[name].js',
         globalObject: `(typeof self !== 'undefined' ? self : this)`,
     },
@@ -65,5 +66,6 @@ module.exports = {
         '@youwol/fv-tree': '@youwol/fv-tree',
         '@youwol/fv-group': '@youwol/fv-group',
     },
+    //devtool: false,
     devtool: 'source-map',
 }
