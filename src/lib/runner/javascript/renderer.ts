@@ -7,8 +7,7 @@ import { CdnClient, Lib } from '../types'
 
 export function renderJavaScript() {
     const cdnClient: CdnClient = window['@youwol/cdn-client']
-    const elemHTML: HTMLElement = this
-    elemHTML.style.setProperty('position', 'relative')
+    this.style.setProperty('position', 'relative')
     const loadingScreen = new cdnClient.LoadingScreenView({
         container: this,
         logo: `<div style='font-size:x-large'>JavaScript</div>`,
@@ -22,7 +21,7 @@ export function renderJavaScript() {
         },
     })
     loadingScreen.render()
-    let promise = cdnClient
+    const promise = cdnClient
         .install({
             modules: ['@youwol/fv-tree', 'codemirror'],
             scripts: ['codemirror#5.52.0~mode/javascript.min.js'],

@@ -12,11 +12,10 @@ export function renderPython() {
         'scikit-learn': 'sklearn',
     }
 
-    let logo = `<div style='font-size:xxx-large'>🐍</div>`
+    const logo = `<div style='font-size:xxx-large'>🐍</div>`
     const pyodideVersion = '0.19.1'
     const cdnClient: CdnClient = window['@youwol/cdn-client']
-    const elemHTML: HTMLElement = this
-    elemHTML.style.setProperty('position', 'relative')
+    this.style.setProperty('position', 'relative')
     const loadingScreen = new cdnClient.LoadingScreenView({
         container: this,
         logo,
@@ -31,7 +30,7 @@ export function renderPython() {
     })
     loadingScreen.render()
 
-    let indexPyodide =
+    const indexPyodide =
         cdnClient.getUrlBase('@pyodide/pyodide', pyodideVersion) + '/full'
 
     async function loadDependencies() {
@@ -73,7 +72,7 @@ export function renderPython() {
             )
         }
         const promises = ['numpy', 'pandas', 'scikit-learn']
-            .filter((name) => elemHTML.hasAttribute(name))
+            .filter((name) => this.hasAttribute(name))
             .map((name) => {
                 loadingScreen.next(
                     new cdnClient.CdnMessageEvent(
