@@ -191,7 +191,7 @@ export class DiagnosticContentView implements VirtualDOM {
         minHeight: '0',
     }
     public readonly diagnostics$: Observable<ts.Diagnostic[]>
-    public readonly children: any
+    public readonly children: Array<VirtualDOM>
 
     constructor(params: { diagnostics$: Observable<ts.Diagnostic[]> }) {
         Object.assign(this, params)
