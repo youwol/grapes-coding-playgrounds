@@ -1,19 +1,35 @@
+const apiVersion = '003'
+const externals = {
+    '@youwol/flux-view': '@youwol/flux-view_APIv01',
+    rxjs: 'rxjs_APIv6',
+    '@youwol/cdn-client': '@youwol/cdn-client_APIv01',
+    grapesjs: 'grapesjs_APIv018',
+    typescript: 'ts_APIv4',
+    codemirror: 'CodeMirror_APIv5',
+    '@youwol/fv-tree': '@youwol/fv-tree_APIv01',
+    'rxjs/operators': {
+        commonjs: 'rxjs/operators',
+        commonjs2: 'rxjs/operators',
+        root: ['rxjs_APIv6', 'operators'],
+    },
+}
 const path = require('path')
+const pkg = require('./package.json')
 const ROOT = path.resolve(__dirname, 'src')
 const DESTINATION = path.resolve(__dirname, 'dist')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
-const packageJson = require('./package.json')
-const assetId = Buffer.from(packageJson.name).toString('base64')
+const assetId = Buffer.from(pkg.name).toString('base64')
+
 module.exports = {
     context: ROOT,
     entry: {
-        [packageJson.name]: './lib/index.ts',
-        [packageJson.name + '/js-playground']:
+        [pkg.name]: './lib/index.ts',
+        [pkg.name + '/js-playground']:
             './lib/runner/javascript/js-playground.ts',
-        [packageJson.name + '/ts-playground']:
+        [pkg.name + '/ts-playground']:
             './lib/runner/typescript/ts-playground.ts',
-        [packageJson.name + '/python-playground']:
+        [pkg.name + '/python-playground']:
             './lib/runner/python/python-playground.ts',
     },
     plugins: [
@@ -24,12 +40,12 @@ module.exports = {
         }),
     ],
     output: {
-        publicPath: `/api/assets-gateway/raw/package/${assetId}/${packageJson.version}/dist/`,
         path: DESTINATION,
+        publicPath: `/api/assets-gateway/raw/package/${assetId}/${pkg.version}/dist/`,
         libraryTarget: 'umd',
         umdNamedDefine: true,
-        library: '[name]',
-        devtoolNamespace: packageJson.name,
+        library: `[name]_APIv${apiVersion}`,
+        devtoolNamespace: `${pkg.name}_APIv${apiVersion}`,
         filename: '[name].js',
         globalObject: `(typeof self !== 'undefined' ? self : this)`,
     },
@@ -37,6 +53,7 @@ module.exports = {
         extensions: ['.ts', 'tsx', '.js'],
         modules: [ROOT, 'node_modules'],
     },
+    externals,
     module: {
         rules: [
             {
@@ -46,26 +63,5 @@ module.exports = {
             },
         ],
     },
-    externals: {
-        lodash: {
-            commonjs: 'lodash',
-            commonjs2: 'lodash',
-            root: '_',
-        },
-        rxjs: 'rxjs',
-        'rxjs/operators': {
-            commonjs: 'rxjs/operators',
-            commonjs2: 'rxjs/operators',
-            root: ['rxjs', 'operators'],
-        },
-        '@youwol/cdn-client': '@youwol/cdn-client',
-        '@youwol/flux-view': '@youwol/flux-view',
-        grapesjs: 'grapesjs',
-        codemirror: 'CodeMirror',
-        typescript: 'ts',
-        '@youwol/fv-tree': '@youwol/fv-tree',
-        '@youwol/fv-group': '@youwol/fv-group',
-    },
-    //devtool: false,
     devtool: 'source-map',
 }
