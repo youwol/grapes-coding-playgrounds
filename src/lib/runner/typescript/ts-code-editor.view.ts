@@ -33,7 +33,7 @@ export class TsCodeEditorView extends CodeEditorView {
         })
         createDefaultMapFromCDN(
             { target: ts.ScriptTarget.ES2020 },
-            '4.6.2',
+            '4.7.4',
         ).then((fsMap) => {
             this.fsMap$.next(fsMap)
         })

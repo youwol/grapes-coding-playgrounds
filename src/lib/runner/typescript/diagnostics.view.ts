@@ -49,7 +49,7 @@ export class DiagnosticsState {
     public readonly src$: Observable<string>
     public readonly cursor$: Observable<CodeMirror.Position>
     public readonly fileSystem$ = from(
-        createDefaultMapFromCDN({ target: ts.ScriptTarget.ES2015 }, '4.6.2'),
+        createDefaultMapFromCDN({ target: ts.ScriptTarget.ES2015 }, '4.7.4'),
     ).pipe(shareReplay(1))
 
     public readonly env$: Observable<VirtualTypeScriptEnvironment>
