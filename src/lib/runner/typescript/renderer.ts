@@ -50,7 +50,7 @@ export function renderTypeScript() {
                         '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/ts-playground.js',
                     ],
                     aliases: {
-                        lib: '@youwol/grapes-coding-playgrounds/ts-playground',
+                        lib: '@youwol/grapes-coding-playgrounds/ts-playground_APIv003',
                     },
                 },
                 {
