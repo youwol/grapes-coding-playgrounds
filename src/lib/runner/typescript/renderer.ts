@@ -6,10 +6,13 @@
 import { CdnClient, Lib } from '../types'
 
 export function renderTypeScript() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias -- I strongly believe it helps readability
+    const htmlComponent: HTMLDivElement = this
+
     const cdnClient: CdnClient = window['@youwol/cdn-client']
-    this.style.setProperty('position', 'relative')
+    htmlComponent.style.setProperty('position', 'relative')
     const loadingScreen = new cdnClient.LoadingScreenView({
-        container: this,
+        container: htmlComponent,
         logo: `<div style='font-size:x-large'>TypeScript</div>`,
         wrapperStyle: {
             position: 'absolute',
@@ -62,6 +65,6 @@ export function renderTypeScript() {
 
     promise.then(({ lib }) => {
         loadingScreen.done()
-        lib.renderElement(this)
+        lib.renderElement(htmlComponent)
     })
 }

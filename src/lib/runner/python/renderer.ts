@@ -11,14 +11,16 @@ export function renderPython() {
         pandas: 'pandas',
         'scikit-learn': 'sklearn',
     }
-
+    // eslint-disable-next-line @typescript-eslint/no-this-alias -- I strongly believe it helps readability
+    const htmlComponent: HTMLDivElement = this
     const logo = `<div style='font-size:xxx-large'>🐍</div>`
     const pyodideVersion = '0.19.1'
     const apiVersion = htmlComponent.getAttribute('apiVersion')
     const cdnClient: CdnClient = window['@youwol/cdn-client']
-    this.style.setProperty('position', 'relative')
+
+    htmlComponent.style.setProperty('position', 'relative')
     const loadingScreen = new cdnClient.LoadingScreenView({
-        container: this,
+        container: htmlComponent,
         logo,
         wrapperStyle: {
             position: 'absolute',
@@ -73,7 +75,7 @@ export function renderPython() {
             )
         }
         const promises = ['numpy', 'pandas', 'scikit-learn']
-            .filter((name) => this.hasAttribute(name))
+            .filter((name) => htmlComponent.hasAttribute(name))
             .map((name) => {
                 loadingScreen.next(
                     new cdnClient.CdnMessageEvent(
@@ -125,6 +127,6 @@ export function renderPython() {
     }
 
     loadDependencies().then(({ lib, pyodide }) => {
-        lib.renderElement(this, pyodide)
+        lib.renderElement(htmlComponent, pyodide)
     })
 }
