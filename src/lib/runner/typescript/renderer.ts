@@ -21,7 +21,7 @@ export function renderTypeScript() {
         },
     })
     loadingScreen.render()
-
+    const apiVersion = htmlComponent.getAttribute('apiVersion')
     const promise = cdnClient
         .install(
             {
@@ -49,7 +49,7 @@ export function renderTypeScript() {
                         '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/ts-playground.js',
                     ],
                     aliases: {
-                        lib: '@youwol/grapes-coding-playgrounds/ts-playground_APIv003',
+                        lib: `@youwol/grapes-coding-playgrounds/ts-playground_APIv${apiVersion}`,
                     },
                 },
                 {

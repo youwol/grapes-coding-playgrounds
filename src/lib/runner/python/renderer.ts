@@ -14,6 +14,7 @@ export function renderPython() {
 
     const logo = `<div style='font-size:xxx-large'>🐍</div>`
     const pyodideVersion = '0.19.1'
+    const apiVersion = htmlComponent.getAttribute('apiVersion')
     const cdnClient: CdnClient = window['@youwol/cdn-client']
     this.style.setProperty('position', 'relative')
     const loadingScreen = new cdnClient.LoadingScreenView({
@@ -110,7 +111,7 @@ export function renderPython() {
                     '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/python-playground.js',
                 ],
                 aliases: {
-                    lib: '@youwol/grapes-coding-playgrounds/python-playground_APIv003',
+                    lib: `@youwol/grapes-coding-playgrounds/python-playground_APIv${apiVersion}`,
                 },
             },
             {

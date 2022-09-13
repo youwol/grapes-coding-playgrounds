@@ -1,6 +1,7 @@
 import * as grapesjs from 'grapesjs'
 
 import { editCode } from './editor'
+import { setup } from '../auto-generated'
 
 export function editSrcTrait({
     appState,
@@ -94,6 +95,7 @@ export class Component {
                     componentType: this.componentType,
                     src: this.defaultExeSrc,
                     'src-test': this.defaultTestSrc,
+                    apiVersion: setup.apiVersion,
                 },
                 traits: [
                     editSrcTrait({

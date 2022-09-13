@@ -20,6 +20,7 @@ export function renderJavaScript() {
             'font-weight': 'bolder',
         },
     })
+    const apiVersion = htmlComponent.getAttribute('apiVersion')
     loadingScreen.render()
     const promise = cdnClient
         .install({
@@ -37,7 +38,7 @@ export function renderJavaScript() {
                         '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/js-playground.js',
                     ],
                     aliases: {
-                        lib: '@youwol/grapes-coding-playgrounds/js-playground_APIv003',
+                        lib: `@youwol/grapes-coding-playgrounds/js-playground_APIv${apiVersion}`,
                     },
                 },
                 {
