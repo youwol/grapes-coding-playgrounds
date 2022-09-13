@@ -49,7 +49,7 @@ export class DiagnosticsState {
     public readonly src$: Observable<string>
     public readonly cursor$: Observable<CodeMirror.Position>
     public readonly fileSystem$ = from(
-        createDefaultMapFromCDN({ target: ts.ScriptTarget.ES2015 }, '4.6.2'),
+        createDefaultMapFromCDN({ target: ts.ScriptTarget.ES2015 }, '4.7.4'),
     ).pipe(shareReplay(1))
 
     public readonly env$: Observable<VirtualTypeScriptEnvironment>
@@ -191,7 +191,7 @@ export class DiagnosticContentView implements VirtualDOM {
         minHeight: '0',
     }
     public readonly diagnostics$: Observable<ts.Diagnostic[]>
-    public readonly children: any
+    public readonly children: Array<VirtualDOM>
 
     constructor(params: { diagnostics$: Observable<ts.Diagnostic[]> }) {
         Object.assign(this, params)

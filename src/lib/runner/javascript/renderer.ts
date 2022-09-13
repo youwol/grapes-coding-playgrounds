@@ -6,11 +6,13 @@
 import { CdnClient, Lib } from '../types'
 
 export function renderJavaScript() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias -- I strongly believe it helps readability
+    const htmlComponent: HTMLDivElement = this
+
     const cdnClient: CdnClient = window['@youwol/cdn-client']
-    const elemHTML: HTMLElement = this
-    elemHTML.style.setProperty('position', 'relative')
+    htmlComponent.style.setProperty('position', 'relative')
     const loadingScreen = new cdnClient.LoadingScreenView({
-        container: this,
+        container: htmlComponent,
         logo: `<div style='font-size:x-large'>JavaScript</div>`,
         wrapperStyle: {
             position: 'absolute',
@@ -21,8 +23,9 @@ export function renderJavaScript() {
             'font-weight': 'bolder',
         },
     })
+    const apiVersion = htmlComponent.getAttribute('apiVersion')
     loadingScreen.render()
-    let promise = cdnClient
+    const promise = cdnClient
         .install({
             modules: ['@youwol/fv-tree', 'codemirror'],
             scripts: ['codemirror#5.52.0~mode/javascript.min.js'],
@@ -38,7 +41,7 @@ export function renderJavaScript() {
                         '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/js-playground.js',
                     ],
                     aliases: {
-                        lib: '@youwol/grapes-coding-playgrounds/js-playground',
+                        lib: `@youwol/grapes-coding-playgrounds/js-playground_APIv${apiVersion}`,
                     },
                 },
                 {
@@ -51,6 +54,6 @@ export function renderJavaScript() {
 
     promise.then(({ lib }) => {
         loadingScreen.done()
-        lib.renderElement(this)
+        lib.renderElement(htmlComponent)
     })
 }

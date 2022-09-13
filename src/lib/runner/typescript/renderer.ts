@@ -6,11 +6,13 @@
 import { CdnClient, Lib } from '../types'
 
 export function renderTypeScript() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias -- I strongly believe it helps readability
+    const htmlComponent: HTMLDivElement = this
+
     const cdnClient: CdnClient = window['@youwol/cdn-client']
-    const elemHTML: HTMLElement = this
-    elemHTML.style.setProperty('position', 'relative')
+    htmlComponent.style.setProperty('position', 'relative')
     const loadingScreen = new cdnClient.LoadingScreenView({
-        container: this,
+        container: htmlComponent,
         logo: `<div style='font-size:x-large'>TypeScript</div>`,
         wrapperStyle: {
             position: 'absolute',
@@ -22,8 +24,8 @@ export function renderTypeScript() {
         },
     })
     loadingScreen.render()
-
-    let promise = cdnClient
+    const apiVersion = htmlComponent.getAttribute('apiVersion')
+    const promise = cdnClient
         .install(
             {
                 modules: ['@youwol/fv-tree', 'codemirror', 'typescript'],
@@ -50,7 +52,7 @@ export function renderTypeScript() {
                         '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/ts-playground.js',
                     ],
                     aliases: {
-                        lib: '@youwol/grapes-coding-playgrounds/ts-playground',
+                        lib: `@youwol/grapes-coding-playgrounds/ts-playground_APIv${apiVersion}`,
                     },
                 },
                 {
@@ -63,6 +65,6 @@ export function renderTypeScript() {
 
     promise.then(({ lib }) => {
         loadingScreen.done()
-        lib.renderElement(this)
+        lib.renderElement(htmlComponent)
     })
 }

@@ -1,16 +1,14 @@
 import { Subject } from 'rxjs'
 import { HTMLElement$, VirtualDOM } from '@youwol/flux-view'
-import { CodeEditorState } from './code-editor.view'
 
 export class HeaderView {
-    public readonly state: CodeEditorState
     public readonly run$ = new Subject<boolean>()
     public readonly children: VirtualDOM[]
     public readonly connectedCallback: (
         elem: HTMLElement$ & HTMLDivElement,
     ) => void
 
-    constructor(params: { state: CodeEditorState }) {
+    constructor(params) {
         Object.assign(this, params)
         this.children = [
             {

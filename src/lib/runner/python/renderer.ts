@@ -11,14 +11,16 @@ export function renderPython() {
         pandas: 'pandas',
         'scikit-learn': 'sklearn',
     }
-
-    let logo = `<div style='font-size:xxx-large'>🐍</div>`
+    // eslint-disable-next-line @typescript-eslint/no-this-alias -- I strongly believe it helps readability
+    const htmlComponent: HTMLDivElement = this
+    const logo = `<div style='font-size:xxx-large'>🐍</div>`
     const pyodideVersion = '0.19.1'
+    const apiVersion = htmlComponent.getAttribute('apiVersion')
     const cdnClient: CdnClient = window['@youwol/cdn-client']
-    const elemHTML: HTMLElement = this
-    elemHTML.style.setProperty('position', 'relative')
+
+    htmlComponent.style.setProperty('position', 'relative')
     const loadingScreen = new cdnClient.LoadingScreenView({
-        container: this,
+        container: htmlComponent,
         logo,
         wrapperStyle: {
             position: 'absolute',
@@ -31,7 +33,7 @@ export function renderPython() {
     })
     loadingScreen.render()
 
-    let indexPyodide =
+    const indexPyodide =
         cdnClient.getUrlBase('@pyodide/pyodide', pyodideVersion) + '/full'
 
     async function loadDependencies() {
@@ -73,7 +75,7 @@ export function renderPython() {
             )
         }
         const promises = ['numpy', 'pandas', 'scikit-learn']
-            .filter((name) => elemHTML.hasAttribute(name))
+            .filter((name) => htmlComponent.hasAttribute(name))
             .map((name) => {
                 loadingScreen.next(
                     new cdnClient.CdnMessageEvent(
@@ -111,7 +113,7 @@ export function renderPython() {
                     '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/python-playground.js',
                 ],
                 aliases: {
-                    lib: '@youwol/grapes-coding-playgrounds/python-playground',
+                    lib: `@youwol/grapes-coding-playgrounds/python-playground_APIv${apiVersion}`,
                 },
             },
             {
@@ -125,6 +127,6 @@ export function renderPython() {
     }
 
     loadDependencies().then(({ lib, pyodide }) => {
-        lib.renderElement(this, pyodide)
+        lib.renderElement(htmlComponent, pyodide)
     })
 }
