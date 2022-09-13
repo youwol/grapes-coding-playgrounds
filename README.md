@@ -1,7 +1,9 @@
+# @youwol/grapes-coding-playgrounds
+
 Various components for grapes for live coding in different languages.
 
-This library is part of the hybrid cloud/local ecosystem 
-[YouWol](https://platform.youwol.com/applications/@youwol/platform/latest)
+This library is part of the hybrid cloud/local ecosystem
+[YouWol](https://platform.youwol.com/applications/@youwol/platform/latest).
 
 ## Links
 
@@ -20,7 +22,9 @@ To install the required dependencies:
 ```shell
 yarn
 ```
+
 ---
+
 To build for development:
 
 ```shell
@@ -32,18 +36,21 @@ To build for production:
 ```shell
 yarn build:prod
 ```
+
 ---
 
-
 To run tests:
+
 ```shell
 yarn test
 ```
 
 Coverage can be evaluated using:
+
 ```shell
 yarn test-coverage
 ```
+
 ---
 
 To generate code's documentation:
