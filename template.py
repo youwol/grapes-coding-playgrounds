@@ -20,15 +20,15 @@ template = Template(
     dependencies=Dependencies(
         runTime=RunTimeDeps(
             load={
-                '@youwol/flux-view': "^1.0.0",
+                '@youwol/flux-view': "^1.0.3",
                 'rxjs': "^6.5.5",
-                '@youwol/cdn-client': "^1.0.0",
+                '@youwol/cdn-client': "^1.0.2",
             },
             differed={
                 'typescript': "^4.7.4",
                 "@typescript/vfs": "^1.3.5",
                 "codemirror": "^5.52.0",
-                "@youwol/fv-tree": "^0.2.0",
+                "@youwol/fv-tree": "^0.2.3",
             },
             includedInBundle=["@typescript/vfs"]
         ),
