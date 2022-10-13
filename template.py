@@ -2,13 +2,24 @@ import shutil
 from pathlib import Path
 
 from youwol.pipelines.pipeline_typescript_weback_npm import Template, PackageType, Dependencies, \
-    RunTimeDeps, generate_template
+    RunTimeDeps, generate_template, Bundles, MainModule
 from youwol_utils import parse_json
 
 folder_path = Path(__file__).parent
 
 pkg_json = parse_json(folder_path / 'package.json')
 
+load_dependencies = {
+    '@youwol/flux-view': "^1.0.3",
+    'rxjs': "^6.5.5",
+    '@youwol/cdn-client': "^1.0.2"
+}
+differed_dependencies = {
+    'typescript': "^4.7.4",
+    "@typescript/vfs": "^1.3.5",
+    "codemirror": "^5.52.0",
+    "@youwol/fv-tree": "^0.2.3",
+}
 
 template = Template(
     path=folder_path,
@@ -19,18 +30,12 @@ template = Template(
     author=pkg_json['author'],
     dependencies=Dependencies(
         runTime=RunTimeDeps(
-            load={
-                '@youwol/flux-view': "^1.0.3",
-                'rxjs': "^6.5.5",
-                '@youwol/cdn-client': "^1.0.2",
+            externals={
+                **load_dependencies,
+                **differed_dependencies
             },
-            differed={
-                'typescript': "^4.7.4",
-                "@typescript/vfs": "^1.3.5",
-                "codemirror": "^5.52.0",
-                "@youwol/fv-tree": "^0.2.3",
-            },
-            includedInBundle=["@typescript/vfs"]
+            includedInBundle={
+                "@typescript/vfs": "^1.3.5",}
         ),
         devTime={
             #  those two prevent failure of typedoc
@@ -40,7 +45,13 @@ template = Template(
             'grapesjs': "0.18.3"
         }
     ),
-    userGuide=True
+    userGuide=True,
+    bundles=Bundles(
+        mainModule=MainModule(
+            entryFile="./index.ts",
+            loadDependencies=list(load_dependencies.keys())
+        )
+    )
 )
 
 generate_template(template)
