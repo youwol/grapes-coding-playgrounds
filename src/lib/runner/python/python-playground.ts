@@ -40,8 +40,6 @@ export function renderElement(element: HTMLElement, pyodide) {
         new: (T, ...p) => new T(...p),
         call: (obj: unknown, method: string, ...args) => obj[method](...args),
     }
-
-    console.log('pyodide', { uid, pyodide })
     const startingSrc = element.getAttribute('src')
     const vDOM = new PlaygroundView({
         testSrc: element.getAttribute('src-test'),
