@@ -2,6 +2,7 @@ import { BehaviorSubject, ReplaySubject } from 'rxjs'
 import { HTMLElement$, VirtualDOM } from '@youwol/flux-view'
 
 import CodeMirror from 'codemirror'
+import { take } from 'rxjs/operators'
 
 export class CodeEditorView {
     public readonly config = {
@@ -22,7 +23,9 @@ export class CodeEditorView {
     public readonly children: VirtualDOM[]
 
     public readonly nativeEditor$ = new ReplaySubject<CodeMirror.Editor>(1)
-
+    public readonly connectedCallback: (
+        elem: HTMLDivElement & HTMLElement$,
+    ) => void
     constructor(params: {
         src$: BehaviorSubject<string>
         language: string
@@ -58,5 +61,37 @@ export class CodeEditorView {
                 },
             },
         ]
+        this.connectedCallback = (elem: HTMLDivElement) => {
+            // Code mirror editors has problem when being first rendered in a div that is not visible
+            // Following is to intersect the view port and get notified when intersection changes
+            const getDisplayNoneElement = (currentElem: HTMLElement) => {
+                if (getComputedStyle(currentElem).display == 'none') {
+                    return currentElem
+                }
+                const parent = currentElem.parentElement
+                if (!parent) {
+                    return
+                }
+                return getDisplayNoneElement(parent)
+            }
+            const parentInvisible = getDisplayNoneElement(elem)
+
+            const observer = new IntersectionObserver(
+                (entries, _observer) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            this.nativeEditor$
+                                .pipe(take(1))
+                                .subscribe((editor) => {
+                                    editor.refresh()
+                                })
+                            _observer.disconnect()
+                        }
+                    })
+                },
+                { root: parentInvisible },
+            )
+            observer.observe(elem)
+        }
     }
 }
