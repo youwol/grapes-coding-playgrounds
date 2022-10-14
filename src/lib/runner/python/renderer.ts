@@ -6,15 +6,9 @@
 import { CdnClient } from '../types'
 
 export function renderPython() {
-    const imports = {
-        numpy: 'numpy',
-        pandas: 'pandas',
-        'scikit-learn': 'sklearn',
-    }
     // eslint-disable-next-line @typescript-eslint/no-this-alias -- I strongly believe it helps readability
     const htmlComponent: HTMLDivElement = this
     const logo = `<div style='font-size:xxx-large'>🐍</div>`
-    const pyodideVersion = '0.19.1'
     const apiVersion = htmlComponent.getAttribute('apiVersion')
     const cdnClient: CdnClient = window['@youwol/cdn-client']
 
@@ -33,8 +27,10 @@ export function renderPython() {
     })
     loadingScreen.render()
 
-    const indexPyodide =
-        cdnClient.getUrlBase('@pyodide/pyodide', pyodideVersion) + '/full'
+    const exportedPyodideInstanceName = 'loadedPyodide'
+    const packages = ['numpy', 'pandas', 'scikit-learn']
+        .filter((name) => htmlComponent.hasAttribute(name))
+        .map((p) => `@pyodide/${p}`)
 
     async function loadDependencies() {
         await cdnClient.install(
@@ -42,12 +38,22 @@ export function renderPython() {
                 modules: [
                     { name: '@youwol/fv-tree', version: 'latest' },
                     { name: 'codemirror', version: 'latest' },
-                    { name: '@pyodide/pyodide', version: pyodideVersion },
                 ],
                 scripts: ['codemirror#5.52.0~mode/python.min.js'],
                 css: [
                     'codemirror#5.52.0~codemirror.min.css',
                     'codemirror#5.52.0~theme/blackboard.min.css',
+                ],
+                customInstallers: [
+                    {
+                        module: '@youwol/cdn-pyodide-loader',
+                        installInputs: {
+                            modules: packages,
+                            warmUp: true,
+                            onEvent: (ev) => loadingScreen.next(ev),
+                            exportedPyodideInstanceName,
+                        },
+                    },
                 ],
             },
             {
@@ -56,57 +62,7 @@ export function renderPython() {
                 },
             },
         )
-        if (!window['loadedPyodide']) {
-            window['loadedPyodide'] = window['loadPyodide']({
-                indexURL: indexPyodide,
-            })
-        }
-        loadingScreen.next(
-            new cdnClient.CdnMessageEvent('loadPyodide', 'Loading Pyodide...'),
-        )
-        const pyodide = await window['loadedPyodide']
-        loadingScreen.next(
-            new cdnClient.CdnMessageEvent('loadPyodide', 'Pyodide loaded'),
-        )
-        const messageCallback = (m) => {
-            m = m.split('from')[0]
-            loadingScreen.next(
-                new cdnClient.CdnMessageEvent('load package_', m),
-            )
-        }
-        const promises = ['numpy', 'pandas', 'scikit-learn']
-            .filter((name) => htmlComponent.hasAttribute(name))
-            .map((name) => {
-                loadingScreen.next(
-                    new cdnClient.CdnMessageEvent(
-                        `load${name}`,
-                        `${name} loading...`,
-                    ),
-                )
-                return pyodide.loadPackage(name, messageCallback).then(() => {
-                    loadingScreen.next(
-                        new cdnClient.CdnMessageEvent(
-                            `load${name}`,
-                            `${name} installing...`,
-                        ),
-                    )
-                    pyodide.runPython(`import ${imports[name]}`)
-                    loadingScreen.next(
-                        new cdnClient.CdnMessageEvent(
-                            `load${name}`,
-                            `${name} installed`,
-                        ),
-                    )
-                    return true
-                })
-            })
-        await Promise.all(promises)
-        loadingScreen.next(
-            new cdnClient.CdnMessageEvent(
-                'load python-playground',
-                'python-playground installing...',
-            ),
-        )
+
         const { lib } = (await cdnClient.install(
             {
                 scripts: [
@@ -123,7 +79,7 @@ export function renderPython() {
             },
         )) as unknown as { lib }
         loadingScreen.done()
-        return { lib, pyodide }
+        return { lib, pyodide: window[exportedPyodideInstanceName] }
     }
 
     loadDependencies().then(({ lib, pyodide }) => {
