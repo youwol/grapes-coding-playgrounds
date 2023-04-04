@@ -25,7 +25,7 @@ export class SplitModeView implements VirtualDOM {
     constructor(params: { splitMode$: BehaviorSubject<SplitMode> }) {
         Object.assign(this, params)
 
-        let iconView = (target: SplitMode) => {
+        const iconView = (target: SplitMode) => {
             const classes: Record<SplitMode, string> = {
                 split: 'fa-columns',
                 'output-only': 'fa-eye',
@@ -83,35 +83,34 @@ export class PlaygroundView {
         this.splitMode$ = new BehaviorSubject<SplitMode>(params.splitMode)
         this.mode$ = new BehaviorSubject('journal')
         this.run$ = new BehaviorSubject(false)
-
+        this.codeEditorView.run$.subscribe((d) => this.run$.next(d))
         this.children = [
             new SplitModeView({ splitMode$: this.splitMode$ }),
-            child$(this.splitMode$, (mode) =>
-                mode != 'output-only'
-                    ? {
-                          class: `h-100 d-flex flex-column ${
-                              mode == 'split' ? 'w-50' : 'w-100'
-                          }`,
-                          children: [
-                              {
-                                  class: 'w-100 d-flex justify-content-center',
-                                  children: [
-                                      {
-                                          tag: 'i',
-                                          class: 'fv-pointer rounded m-1 fas fa-play fv-hover-text-focus',
-                                          onclick: () => this.run$.next(true),
-                                      },
-                                  ],
-                              },
-                              {
-                                  class: 'flex-grow-1',
-                                  style: { minHeight: '0px' },
-                                  children: [this.codeEditorView],
-                              },
-                          ],
-                      }
-                    : {},
-            ),
+            {
+                class: attr$(
+                    this.splitMode$,
+                    (mode) => `h-100 flex-column 
+                    ${mode == 'split' ? 'w-50' : 'w-100'} 
+                    ${mode == 'output-only' ? 'd-none' : 'd-flex '}`,
+                ),
+                children: [
+                    {
+                        class: 'w-100 d-flex justify-content-center',
+                        children: [
+                            {
+                                tag: 'i',
+                                class: 'fv-pointer rounded m-1 fas fa-play fv-hover-text-focus',
+                                onclick: () => this.run$.next(true),
+                            },
+                        ],
+                    },
+                    {
+                        class: 'flex-grow-1',
+                        style: { minHeight: '0px' },
+                        children: [this.codeEditorView],
+                    },
+                ],
+            },
             child$(
                 this.run$.pipe(withLatestFrom(this.codeEditorView.src$)),
                 ([_, src]) =>
@@ -215,7 +214,7 @@ class ConsoleView {
     }) {
         Object.assign(this, params)
         this.class = attr$(this.splitMode$, (mode) => {
-            let base = 'h-100 px-2 d-flex flex-column'
+            const base = 'h-100 px-2 d-flex flex-column'
             return {
                 'code-only': 'd-none',
                 split: `w-50 ${base}`,
@@ -241,10 +240,11 @@ class ConsoleView {
         const defaultModes: ModeConsole[] = ['journal', 'test']
         this.children = [
             child$(output$, (output) => {
-                if (output instanceof InterpretError)
+                if (output instanceof InterpretError) {
                     return {
                         class: 'fas fa-bug fv-text-error w-100 text-center',
                     }
+                }
                 return new HeaderConsole({
                     mode$: this.mode$,
                     types: defaultModes.concat(
