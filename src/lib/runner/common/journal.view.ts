@@ -1,7 +1,7 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { attr$, childrenAppendOnly$, VirtualDOM } from '@youwol/flux-view'
 import { DataView, Log, LogObjectHeader } from './utils.view'
-import { map } from 'rxjs/operators'
+import { map, take } from 'rxjs/operators'
 
 export class JournalView {
     public readonly class = 'h-100 d-flex flex-column'
@@ -16,6 +16,7 @@ export class JournalView {
         Object.assign(this, params)
 
         this.selectedLog$ = new BehaviorSubject(undefined)
+        this.log$.pipe(take(1)).subscribe((log) => this.selectedLog$.next(log))
 
         this.children = [
             {
