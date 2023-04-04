@@ -83,7 +83,7 @@ export class PlaygroundView {
         this.splitMode$ = new BehaviorSubject<SplitMode>(params.splitMode)
         this.mode$ = new BehaviorSubject('journal')
         this.run$ = new BehaviorSubject(false)
-
+        this.codeEditorView.run$.subscribe((d) => this.run$.next(d))
         this.children = [
             new SplitModeView({ splitMode$: this.splitMode$ }),
             child$(this.splitMode$, (mode) =>

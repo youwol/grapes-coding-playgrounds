@@ -1,4 +1,4 @@
-import { BehaviorSubject, ReplaySubject } from 'rxjs'
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs'
 import { HTMLElement$, VirtualDOM } from '@youwol/flux-view'
 
 import CodeMirror from 'codemirror'
@@ -18,6 +18,7 @@ export class CodeEditorView {
         'font-size': 'initial',
     }
     public readonly src$: BehaviorSubject<string>
+    public readonly run$ = new Subject<boolean>()
     public readonly change$ = new ReplaySubject<CodeMirror.EditorChange[]>(1)
     public readonly cursor$ = new ReplaySubject<CodeMirror.Position>(1)
     public readonly children: VirtualDOM[]
@@ -36,6 +37,11 @@ export class CodeEditorView {
             ...this.config,
             mode: this.language,
             value: this.src$.getValue(),
+            extraKeys: {
+                'Ctrl-Enter': () => {
+                    this.run$.next(true)
+                },
+            },
         }
         this.children = [
             {
