@@ -25,7 +25,7 @@ export class SplitModeView implements VirtualDOM {
     constructor(params: { splitMode$: BehaviorSubject<SplitMode> }) {
         Object.assign(this, params)
 
-        let iconView = (target: SplitMode) => {
+        const iconView = (target: SplitMode) => {
             const classes: Record<SplitMode, string> = {
                 split: 'fa-columns',
                 'output-only': 'fa-eye',
@@ -215,7 +215,7 @@ class ConsoleView {
     }) {
         Object.assign(this, params)
         this.class = attr$(this.splitMode$, (mode) => {
-            let base = 'h-100 px-2 d-flex flex-column'
+            const base = 'h-100 px-2 d-flex flex-column'
             return {
                 'code-only': 'd-none',
                 split: `w-50 ${base}`,
@@ -241,10 +241,11 @@ class ConsoleView {
         const defaultModes: ModeConsole[] = ['journal', 'test']
         this.children = [
             child$(output$, (output) => {
-                if (output instanceof InterpretError)
+                if (output instanceof InterpretError) {
                     return {
                         class: 'fas fa-bug fv-text-error w-100 text-center',
                     }
+                }
                 return new HeaderConsole({
                     mode$: this.mode$,
                     types: defaultModes.concat(
