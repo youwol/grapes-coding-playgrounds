@@ -86,32 +86,31 @@ export class PlaygroundView {
         this.codeEditorView.run$.subscribe((d) => this.run$.next(d))
         this.children = [
             new SplitModeView({ splitMode$: this.splitMode$ }),
-            child$(this.splitMode$, (mode) =>
-                mode != 'output-only'
-                    ? {
-                          class: `h-100 d-flex flex-column ${
-                              mode == 'split' ? 'w-50' : 'w-100'
-                          }`,
-                          children: [
-                              {
-                                  class: 'w-100 d-flex justify-content-center',
-                                  children: [
-                                      {
-                                          tag: 'i',
-                                          class: 'fv-pointer rounded m-1 fas fa-play fv-hover-text-focus',
-                                          onclick: () => this.run$.next(true),
-                                      },
-                                  ],
-                              },
-                              {
-                                  class: 'flex-grow-1',
-                                  style: { minHeight: '0px' },
-                                  children: [this.codeEditorView],
-                              },
-                          ],
-                      }
-                    : {},
-            ),
+            {
+                class: attr$(
+                    this.splitMode$,
+                    (mode) => `h-100 flex-column 
+                    ${mode == 'split' ? 'w-50' : 'w-100'} 
+                    ${mode == 'output-only' ? 'd-none' : 'd-flex '}`,
+                ),
+                children: [
+                    {
+                        class: 'w-100 d-flex justify-content-center',
+                        children: [
+                            {
+                                tag: 'i',
+                                class: 'fv-pointer rounded m-1 fas fa-play fv-hover-text-focus',
+                                onclick: () => this.run$.next(true),
+                            },
+                        ],
+                    },
+                    {
+                        class: 'flex-grow-1',
+                        style: { minHeight: '0px' },
+                        children: [this.codeEditorView],
+                    },
+                ],
+            },
             child$(
                 this.run$.pipe(withLatestFrom(this.codeEditorView.src$)),
                 ([_, src]) =>
