@@ -1,4 +1,4 @@
-import * as grapesjs from 'grapesjs'
+import grapesjs from 'grapesjs'
 
 import { editCode } from './editor'
 import { setup } from '../auto-generated'
@@ -127,6 +127,12 @@ export class Component {
                 ] as Record<string, unknown>[],
             },
             initialize() {
+                this.on(`change:attributes:src`, () => {
+                    this.view.render()
+                })
+                this.on(`change:attributes:src-test`, () => {
+                    this.view.render()
+                })
                 this.on(`change:attributes:default-mode`, () => {
                     this.view.render()
                 })

@@ -16,7 +16,7 @@ load_dependencies = {
 }
 differed_dependencies = {
     'typescript': "^4.7.4",
-    "@typescript/vfs": "^1.3.5",
+    "@typescript/vfs": "^1.4.0",
     "codemirror": "^5.52.0",
     "@youwol/fv-tree": "^0.2.3",
 }
@@ -33,16 +33,15 @@ template = Template(
             externals={
                 **load_dependencies,
                 **differed_dependencies
-            },
-            includedInBundle={
-                "@typescript/vfs": "^1.3.5",}
+            }
         ),
         devTime={
             #  those two prevent failure of typedoc
+            "@types/codemirror": "^5.52.0",
             "@types/lz-string": "^1.3.34",
             "lz-string": "^1.4.4",
             #  this is used only for type declarations
-            'grapesjs': "0.18.3"
+            'grapesjs': "0.20.4"
         }
     ),
     userGuide=True,
@@ -70,5 +69,3 @@ for file in ['README.md', '.gitignore', '.npmignore', '.prettierignore', 'LICENS
         src=folder_path / '.template' / file,
         dst=folder_path / file
     )
-
-
