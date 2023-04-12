@@ -31,7 +31,6 @@ export function editCode(
             const headerView = new HeaderView({ state: editorState })
             headerView.run$.pipe(withLatestFrom(src$)).subscribe(([_, src]) => {
                 component && component.addAttributes({ [srcAttName]: src })
-                component.view.render()
             })
             return headerView
         },
