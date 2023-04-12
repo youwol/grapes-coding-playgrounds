@@ -5,13 +5,11 @@ const runTimeDependencies = {
         "rxjs": "^6.5.5",
         "@youwol/cdn-client": "^1.0.2",
         "typescript": "^4.7.4",
-        "@typescript/vfs": "^1.3.5",
+        "@typescript/vfs": "^1.4.0",
         "codemirror": "^5.52.0",
         "@youwol/fv-tree": "^0.2.3"
     },
-    "includedInBundle": {
-        "@typescript/vfs": "^1.3.5"
-    }
+    "includedInBundle": {}
 }
 const externals = {
     "@youwol/flux-view": {
