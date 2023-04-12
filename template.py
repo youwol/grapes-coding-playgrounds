@@ -39,6 +39,7 @@ template = Template(
         ),
         devTime={
             #  those two prevent failure of typedoc
+            "@types/codemirror": "^5.52.0",
             "@types/lz-string": "^1.3.34",
             "lz-string": "^1.4.4",
             #  this is used only for type declarations
