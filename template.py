@@ -16,7 +16,7 @@ load_dependencies = {
 }
 differed_dependencies = {
     'typescript': "^4.7.4",
-    "@typescript/vfs": "^1.3.5",
+    "@typescript/vfs": "^1.4.0",
     "codemirror": "^5.52.0",
     "@youwol/fv-tree": "^0.2.3",
 }
