@@ -1,4 +1,4 @@
-import * as grapesjs from 'grapesjs'
+import grapesjs from 'grapesjs'
 import { AppState, Component } from './utils'
 import { renderJavaScript } from './runner/javascript/renderer'
 import { JsPlaygroundBlockName, JsPlaygroundComponentName } from './constants'

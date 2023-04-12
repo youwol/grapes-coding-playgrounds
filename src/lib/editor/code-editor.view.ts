@@ -2,7 +2,7 @@ import { BehaviorSubject } from 'rxjs'
 import { withLatestFrom } from 'rxjs/operators'
 import { HeaderView } from './editor-header.view'
 
-import * as grapesjs from 'grapesjs'
+import grapesjs from 'grapesjs'
 import { AppState } from '../utils'
 
 const codeMirrorBaseConfiguration = {
