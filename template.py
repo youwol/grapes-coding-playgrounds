@@ -33,9 +33,7 @@ template = Template(
             externals={
                 **load_dependencies,
                 **differed_dependencies
-            },
-            includedInBundle={
-                "@typescript/vfs": "^1.3.5",}
+            }
         ),
         devTime={
             #  those two prevent failure of typedoc
@@ -71,5 +69,3 @@ for file in ['README.md', '.gitignore', '.npmignore', '.prettierignore', 'LICENS
         src=folder_path / '.template' / file,
         dst=folder_path / file
     )
-
-

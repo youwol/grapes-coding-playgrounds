@@ -28,7 +28,12 @@ export function renderTypeScript() {
     const promise = cdnClient
         .install(
             {
-                modules: ['@youwol/fv-tree', 'codemirror', 'typescript'],
+                modules: [
+                    '@youwol/fv-tree#^0.2.3',
+                    'codemirror#^5.52.0',
+                    'typescript#^4.7.4',
+                    '@typescript/vfs#^1.4.0',
+                ],
                 scripts: [
                     'codemirror#5.52.0~mode/javascript.min.js',
                     'codemirror#5.52.0~addons/lint/lint.js',
