@@ -42,12 +42,19 @@ export function editSrcTrait({
     }
 }
 
+export interface CodeTraits {
+    attributeName: string
+    src: string
+    language: string
+}
+
 export class Component {
     public readonly appState: AppState
     public readonly grapesEditor: grapesjs.Editor
     public readonly language: string
     public readonly defaultExeSrc: string
     public readonly defaultTestSrc: string
+    public readonly withCodeTraits?: CodeTraits[]
     public readonly canvasRendering: () => void
     public readonly codeEditorRequirements
     public readonly idFactory: (name: string) => string
@@ -67,6 +74,7 @@ export class Component {
     constructor(params: {
         appState: AppState
         componentType: string
+        withCodeTraits?: CodeTraits[]
         language: string
         grapesEditor: grapesjs.Editor
         defaultExeSrc: string
@@ -82,6 +90,7 @@ export class Component {
     }
 
     getModel() {
+        const customCodeTraits = this.withCodeTraits || []
         return {
             defaults: {
                 script: this.canvasRendering,
@@ -124,6 +133,16 @@ export class Component {
                             { id: 'output-only', name: 'output only' },
                         ],
                     },
+                    ...customCodeTraits.map((trait) => {
+                        return editSrcTrait({
+                            appState: this.appState,
+                            attributeName: trait.attributeName,
+                            src: trait.src,
+                            language: trait.language,
+                            grapesEditor: this.grapesEditor,
+                            requirements: this.codeEditorRequirements,
+                        })
+                    }),
                 ] as Record<string, unknown>[],
             },
             initialize() {
@@ -135,6 +154,11 @@ export class Component {
                 })
                 this.on(`change:attributes:default-mode`, () => {
                     this.view.render()
+                })
+                customCodeTraits.forEach((trait) => {
+                    this.on(`change:attributes:${trait.attributeName}`, () => {
+                        this.view.render()
+                    })
                 })
             },
         }
