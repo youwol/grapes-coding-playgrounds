@@ -42,36 +42,28 @@ export class PythonPlaygroundComponent extends Component {
         super({
             appState: params.appState,
             componentType: PythonPlaygroundComponentName,
+            withCodeTraits: [
+                {
+                    attributeName: 'requirements',
+                    // at some point activate 'jsModules' & 'jsAliases' to import javascript modules in python
+                    src: 'return () => ({ pyModules: [] })',
+                    language: 'javascript',
+                },
+            ],
             language: 'python',
             grapesEditor: params.grapesEditor,
             canvasRendering: renderPython,
             defaultExeSrc: defaultExeSrc,
             defaultTestSrc: defaultTestSrc,
             codeEditorRequirements: {
-                scripts: ['codemirror#5.52.0~mode/python.min.js'],
+                scripts: [
+                    'codemirror#5.52.0~mode/javascript.min.js',
+                    'codemirror#5.52.0~mode/python.min.js',
+                ],
                 css: [],
             },
             idFactory: params.idFactory,
         })
-        const packages = ['numpy', 'pandas', 'scikit-learn']
-        packages.forEach((name) => {
-            this.model.defaults.traits.push({
-                type: 'checkbox',
-                name,
-                label: name,
-                value: false,
-            })
-        })
-        this.model.initialize = function () {
-            packages.forEach((name) => {
-                this.on(`change:attributes:${name}`, () => {
-                    this.view.render()
-                })
-            })
-            this.on(`change:attributes:default-mode`, () => {
-                this.view.render()
-            })
-        }
     }
 }
 
