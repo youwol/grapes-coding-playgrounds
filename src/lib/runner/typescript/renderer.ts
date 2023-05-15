@@ -29,6 +29,7 @@ export function renderTypeScript() {
         .install(
             {
                 modules: [
+                    '@youwol/cdn-client#^2.0.1',
                     '@youwol/fv-tree#^0.2.3',
                     'codemirror#^5.52.0',
                     'typescript#^4.7.4',
@@ -51,6 +52,7 @@ export function renderTypeScript() {
             },
         )
         .then((_) => {
+            console.log('aaaaaa', _)
             return cdnClient.install(
                 {
                     scripts: [
