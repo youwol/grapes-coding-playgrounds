@@ -26,11 +26,10 @@ processing
 `
 
 const defaultTestSrc = `
-def test(result, expect) => {
+return (result, {expect}) => {
     expect("A dummy passing test", true)
     return true
 }
-test
 `
 
 export class PythonPlaygroundComponent extends Component {
