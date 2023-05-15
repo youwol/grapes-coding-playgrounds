@@ -26,18 +26,16 @@ export function renderPython() {
         },
     })
     loadingScreen.render()
-
+    const pyReqs = new Function(htmlComponent.getAttribute('requirements'))()()
     const exportedPyodideInstanceName = 'loadedPyodide'
-    const packages = ['numpy', 'pandas', 'scikit-learn']
-        .filter((name) => htmlComponent.hasAttribute(name))
-        .map((p) => `@pyodide/${p}`)
 
     async function loadDependencies() {
         await cdnClient.install(
             {
                 modules: [
-                    { name: '@youwol/fv-tree', version: 'latest' },
-                    { name: 'codemirror', version: 'latest' },
+                    '@youwol/cdn-client#^2.0.1',
+                    '@youwol/fv-tree#^0.2.3',
+                    'codemirror#^5.52.0',
                 ],
                 scripts: ['codemirror#5.52.0~mode/python.min.js'],
                 css: [
@@ -48,7 +46,7 @@ export function renderPython() {
                     {
                         module: '@youwol/cdn-pyodide-loader',
                         installInputs: {
-                            modules: packages,
+                            modules: pyReqs.pyModules,
                             warmUp: true,
                             onEvent: (ev) => loadingScreen.next(ev),
                             exportedPyodideInstanceName,

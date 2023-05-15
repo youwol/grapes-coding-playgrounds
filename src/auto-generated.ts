@@ -3,7 +3,7 @@ const runTimeDependencies = {
     "externals": {
         "@youwol/flux-view": "^1.0.3",
         "rxjs": "^6.5.5",
-        "@youwol/cdn-client": "^1.0.2",
+        "@youwol/cdn-client": "^2.0.1",
         "typescript": "^4.7.4",
         "@typescript/vfs": "^1.4.0",
         "codemirror": "^5.52.0",
@@ -25,7 +25,7 @@ const externals = {
     "@youwol/cdn-client": {
         "commonjs": "@youwol/cdn-client",
         "commonjs2": "@youwol/cdn-client",
-        "root": "@youwol/cdn-client_APIv1"
+        "root": "@youwol/cdn-client_APIv2"
     },
     "typescript": {
         "commonjs": "typescript",
@@ -66,7 +66,7 @@ const exportedSymbols = {
         "exportedSymbol": "rxjs"
     },
     "@youwol/cdn-client": {
-        "apiKey": "1",
+        "apiKey": "2",
         "exportedSymbol": "@youwol/cdn-client"
     },
     "typescript": {
