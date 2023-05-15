@@ -12,7 +12,7 @@ pkg_json = parse_json(folder_path / 'package.json')
 load_dependencies = {
     '@youwol/flux-view': "^1.0.3",
     'rxjs': "^6.5.5",
-    '@youwol/cdn-client': "^1.0.2"
+    '@youwol/cdn-client': "^2.0.1"
 }
 differed_dependencies = {
     'typescript': "^4.7.4",
