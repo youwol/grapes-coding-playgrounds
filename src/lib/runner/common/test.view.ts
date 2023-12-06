@@ -18,7 +18,7 @@ export class TestView {
             this.expect$.next({ title, validated })
         }
         try {
-            let result = new Function(this.testSrc)()(this.output, {
+            const result = new Function(this.testSrc)()(this.output, {
                 ...window,
                 expect,
             })
