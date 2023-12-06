@@ -107,7 +107,7 @@ export const setup = {
         assetId:'QHlvdXdvbC9ncmFwZXMtY29kaW5nLXBsYXlncm91bmRz',
     version:'0.1.3-wip',
     shortDescription:"Various components for grapes for live coding in different languages.",
-    developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/grapes-coding-playgrounds',
+    developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/grapes-coding-playgrounds&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/grapes-coding-playgrounds',
     sourceGithub:'https://github.com/youwol/grapes-coding-playgrounds',
     userGuide:'https://l.youwol.com/doc/@youwol/grapes-coding-playgrounds',
@@ -122,7 +122,7 @@ export const setup = {
     },
 
     installMainModule: ({cdnClient, installParameters}:{
-        cdnClient:{install:(unknown) => Promise<Window>},
+        cdnClient:{install:(unknown) => Promise<WindowOrWorkerGlobalScope>},
         installParameters?
     }) => {
         const parameters = installParameters || {}
@@ -141,7 +141,7 @@ export const setup = {
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
         name: string,
-        cdnClient:{install:(unknown) => Promise<Window>},
+        cdnClient:{install:(unknown) => Promise<WindowOrWorkerGlobalScope>},
         installParameters?
     }) => {
         const entry = secondaryEntries[name]
