@@ -4,6 +4,7 @@
  * Implicit argument: 'this' variable is bound to the HTMLElement being rendered
  */
 import { CdnClient, Lib } from '../types'
+import { setup } from '../../../auto-generated'
 
 export function renderJavaScript() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias -- I strongly believe it helps readability
@@ -27,7 +28,10 @@ export function renderJavaScript() {
     loadingScreen.render()
     const promise = cdnClient
         .install({
-            modules: ['@youwol/fv-tree', 'codemirror'],
+            modules: [
+                `@youwol/fv-tree#${setup.runTimeDependencies.externals['@youwol/fv-tree']}`,
+                `codemirror#${setup.runTimeDependencies.externals['codemirror']}`,
+            ],
             scripts: ['codemirror#5.52.0~mode/javascript.min.js'],
             css: [
                 'codemirror#5.52.0~codemirror.min.css',
@@ -38,7 +42,7 @@ export function renderJavaScript() {
             return cdnClient.install(
                 {
                     scripts: [
-                        '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/js-playground.js',
+                        `@youwol/grapes-coding-playgrounds#${setup.version}~dist/@youwol/grapes-coding-playgrounds/ts-playground.js`,
                     ],
                     aliases: {
                         lib: `@youwol/grapes-coding-playgrounds/js-playground_APIv${apiVersion}`,

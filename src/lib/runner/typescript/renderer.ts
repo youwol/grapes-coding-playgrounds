@@ -4,6 +4,7 @@
  * Implicit argument: 'this' variable is bound to the HTMLElement being rendered
  */
 import { CdnClient, Lib } from '../types'
+import { setup } from '../../../auto-generated'
 
 export function renderTypeScript() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias -- I strongly believe it helps readability
@@ -29,11 +30,11 @@ export function renderTypeScript() {
         .install(
             {
                 modules: [
-                    '@youwol/cdn-client#^2.0.1',
-                    '@youwol/fv-tree#^0.2.3',
-                    'codemirror#^5.52.0',
-                    'typescript#^4.7.4',
-                    '@typescript/vfs#^1.4.0',
+                    ` @youwol/cdn-client#${setup.runTimeDependencies.externals['@youwol/cdn-client']}`,
+                    `@youwol/fv-tree#${setup.runTimeDependencies.externals['@youwol/fv-tree']}`,
+                    `codemirror#${setup.runTimeDependencies.externals['codemirror']}`,
+                    `typescript#${setup.runTimeDependencies.externals['typescript']}`,
+                    `@typescript/vfs#${setup.runTimeDependencies.externals['@typescript/vfs']}`,
                 ],
                 scripts: [
                     'codemirror#5.52.0~mode/javascript.min.js',
@@ -56,7 +57,7 @@ export function renderTypeScript() {
             return cdnClient.install(
                 {
                     scripts: [
-                        '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/ts-playground.js',
+                        `@youwol/grapes-coding-playgrounds#${setup.version}~dist/@youwol/grapes-coding-playgrounds/ts-playground.js`,
                     ],
                     aliases: {
                         lib: `@youwol/grapes-coding-playgrounds/ts-playground_APIv${apiVersion}`,
