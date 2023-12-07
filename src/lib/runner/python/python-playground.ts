@@ -1,4 +1,4 @@
-import { render } from '@youwol/flux-view'
+import { render } from '@youwol/rx-vdom'
 import {
     CodeEditorView,
     Displayable,
@@ -90,6 +90,7 @@ else:
         return new InterpretError({
             exception: e,
             view: {
+                tag: 'div',
                 innerText: e,
             },
         }) as unknown as Displayable

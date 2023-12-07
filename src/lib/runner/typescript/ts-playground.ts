@@ -2,7 +2,7 @@
  * https://www.npmjs.com/package/@typescript/vfs
  * https://www.typescriptlang.org/dev/sandbox/
  */
-import { render } from '@youwol/flux-view'
+import { render } from '@youwol/rx-vdom'
 import { Displayable, PlaygroundView, SplitMode } from '../common'
 import { runJavascriptCode } from '../utils'
 import * as ts from 'typescript'

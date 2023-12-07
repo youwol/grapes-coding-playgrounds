@@ -1,4 +1,4 @@
-import { render } from '@youwol/flux-view'
+import { render } from '@youwol/rx-vdom'
 import { CodeEditorView, PlaygroundView, SplitMode } from '../common'
 import { InterpretError } from '../common/errors.view'
 import { BehaviorSubject } from 'rxjs'
@@ -19,6 +19,7 @@ export function renderElement(element: HTMLElement) {
                 return new InterpretError({
                     exception: e,
                     view: {
+                        tag: 'div',
                         innerText: e,
                     },
                 })

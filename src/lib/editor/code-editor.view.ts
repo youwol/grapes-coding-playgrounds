@@ -1,5 +1,4 @@
-import { BehaviorSubject } from 'rxjs'
-import { withLatestFrom } from 'rxjs/operators'
+import { BehaviorSubject, withLatestFrom } from 'rxjs'
 import { HeaderView } from './editor-header.view'
 
 import grapesjs from 'grapesjs'
