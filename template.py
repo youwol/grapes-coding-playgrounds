@@ -10,15 +10,14 @@ folder_path = Path(__file__).parent
 pkg_json = parse_json(folder_path / 'package.json')
 
 load_dependencies = {
-    '@youwol/flux-view': "^1.0.3",
-    'rxjs': "^6.5.5",
-    '@youwol/cdn-client': "^2.0.1"
+    '@youwol/rx-vdom': "^1.0.1",
+    'rxjs': "^7.5.6",
+    '@youwol/webpm-client': "^3.0.1"
 }
 differed_dependencies = {
-    'typescript': "^4.7.4",
     "@typescript/vfs": "^1.4.0",
     "codemirror": "^5.52.0",
-    "@youwol/fv-tree": "^0.2.3",
+    "@youwol/rx-tree-views": "^0.3.1",
 }
 
 template = Template(
