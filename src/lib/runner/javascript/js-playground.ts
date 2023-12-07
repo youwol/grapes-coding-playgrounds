@@ -1,15 +1,21 @@
-import { render } from '@youwol/rx-vdom'
 import { CodeEditorView, PlaygroundView, SplitMode } from '../common'
 import { InterpretError } from '../common/errors.view'
 import { BehaviorSubject } from 'rxjs'
 
-export function renderElement(element: HTMLElement) {
-    const vDOM = new PlaygroundView({
-        splitMode:
-            (element.getAttribute('default-mode') as SplitMode) || 'split',
-        testSrc: element.getAttribute('src-test'),
+export function renderElement({
+    mode,
+    src,
+    srcTest,
+}: {
+    mode?: SplitMode
+    src: string
+    srcTest: string
+}) {
+    return new PlaygroundView({
+        splitMode: mode || 'split',
+        testSrc: srcTest,
         codeEditorView: new CodeEditorView({
-            src$: new BehaviorSubject(element.getAttribute('src')),
+            src$: new BehaviorSubject(src),
             language: 'javascript',
         }),
         executor: (src: string, debug) => {
@@ -26,5 +32,4 @@ export function renderElement(element: HTMLElement) {
             }
         },
     })
-    element.appendChild(render(vDOM))
 }
