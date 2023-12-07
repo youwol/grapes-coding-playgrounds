@@ -143,7 +143,7 @@ const entries = {
 export const setup = {
     name:'@youwol/grapes-coding-playgrounds',
         assetId:'QHlvdXdvbC9ncmFwZXMtY29kaW5nLXBsYXlncm91bmRz',
-    version:'0.2.0',
+    version:'0.2.1-wip',
     shortDescription:"Various components for grapes for live coding in different languages.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/grapes-coding-playgrounds&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/grapes-coding-playgrounds',
@@ -189,7 +189,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/grapes-coding-playgrounds#0.2.0~dist/@youwol/grapes-coding-playgrounds/${entry.name}.js`
+            `@youwol/grapes-coding-playgrounds#0.2.1-wip~dist/@youwol/grapes-coding-playgrounds/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
