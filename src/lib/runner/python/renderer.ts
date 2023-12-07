@@ -9,7 +9,6 @@ export function renderPython() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias -- I strongly believe it helps readability
     const htmlComponent: HTMLDivElement = this
     const logo = `<div style='font-size:xxx-large'>🐍</div>`
-    const apiVersion = htmlComponent.getAttribute('apiVersion')
     // The cdn-client is provided by the hosting application (e.g. stories) which may not have been
     // migrated to webpm-client yet.
     const webpmClient: typeof webpmModule =
@@ -58,10 +57,10 @@ export function renderPython() {
 
         const { lib } = (await webpmClient.install({
             scripts: [
-                '@youwol/grapes-coding-playgrounds#0.2.0-wip~dist/@youwol/grapes-coding-playgrounds/python-playground.js',
+                '@youwol/grapes-coding-playgrounds#0.2.0-wip~dist/@youwol/grapes-coding-playgrounds/py-playground.js',
             ],
             aliases: {
-                lib: `@youwol/grapes-coding-playgrounds/python-playground_APIv${apiVersion}`,
+                lib: `@youwol/grapes-coding-playgrounds/py-playground_APIv02`,
             },
             onEvent: (ev) => {
                 loadingScreen.next(ev)

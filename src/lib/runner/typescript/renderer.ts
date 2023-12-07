@@ -28,13 +28,12 @@ export function renderTypeScript() {
         },
     })
     loadingScreen.render()
-    const apiVersion = htmlComponent.getAttribute('apiVersion')
     const promise = webpmClient
         .install({
             modules: [
                 '@youwol/rx-tree-views#^0.3.1',
                 'codemirror#^5.52.0',
-                'typescript#^4.7.4',
+                'typescript#^5.2.2',
                 '@typescript/vfs#^1.4.0',
             ],
             scripts: [
@@ -56,7 +55,7 @@ export function renderTypeScript() {
                     '@youwol/grapes-coding-playgrounds#0.2.0-wip~dist/@youwol/grapes-coding-playgrounds/ts-playground.js',
                 ],
                 aliases: {
-                    lib: `@youwol/grapes-coding-playgrounds/ts-playground_APIv${apiVersion}`,
+                    lib: `@youwol/grapes-coding-playgrounds/ts-playground_APIv02`,
                 },
                 onEvent: (ev) => {
                     loadingScreen.next(ev)

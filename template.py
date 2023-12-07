@@ -2,7 +2,7 @@ import shutil
 from pathlib import Path
 
 from youwol.pipelines.pipeline_typescript_weback_npm import Template, PackageType, Dependencies, \
-    RunTimeDeps, generate_template, Bundles, MainModule
+    RunTimeDeps, generate_template, Bundles, MainModule, AuxiliaryModule
 from youwol.utils import parse_json
 
 folder_path = Path(__file__).parent
@@ -15,9 +15,15 @@ load_dependencies = {
     '@youwol/webpm-client': "^3.0.1"
 }
 differed_dependencies = {
-    "@typescript/vfs": "^1.4.0",
+    # common for `js-playground`, `py-playground` & `ts-playground` auxiliary modules
     "codemirror": "^5.52.0",
     "@youwol/rx-tree-views": "^0.3.1",
+    # `py-playground` auxiliary module
+    "@youwol/webpm-pyodide-loader": "^0.2.0",
+    # `ts-playground` auxiliary module
+    # `typescript` version should match the one from coming from  `@youwol/tsconfig`
+    "typescript": "5.2.2",
+    "@typescript/vfs": "^1.4.0",
 }
 
 template = Template(
@@ -47,7 +53,26 @@ template = Template(
         mainModule=MainModule(
             entryFile="./index.ts",
             loadDependencies=list(load_dependencies.keys())
-        )
+        ),
+        auxiliaryModules=[
+            AuxiliaryModule(
+                name="js-playground",
+                entryFile="./lib/runner/javascript/js-playground.ts",
+                loadDependencies=["@youwol/rx-tree-views", "codemirror"]
+            ),
+            AuxiliaryModule(
+                name="py-playground",
+                entryFile="./lib/runner/python/py-playground.ts",
+                # Not included here: all the python dependencies that will be fetched w/ component configuration
+                loadDependencies=["@youwol/rx-tree-views", "codemirror", "@youwol/webpm-pyodide-loader"]
+            ),
+            AuxiliaryModule(
+                name="ts-playground",
+                entryFile="./lib/runner/typescript/ts-playground.ts",
+                # Again `typescript` is coming from `@youwol/tsconfig`
+                loadDependencies=["@youwol/rx-tree-views", "codemirror", 'typescript', '@typescript/vfs',]
+            )
+        ]
     )
 )
 
@@ -62,7 +87,7 @@ shutil.copyfile(
 #  *  output
 #  *  entry
 for file in ['README.md', '.gitignore', '.npmignore', '.prettierignore', 'LICENSE', 'package.json',
-             'tsconfig.json']:
+             'webpack.config.ts', 'tsconfig.json']:
     shutil.copyfile(
         src=folder_path / '.template' / file,
         dst=folder_path / file
