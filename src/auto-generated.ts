@@ -1,36 +1,30 @@
 
 const runTimeDependencies = {
     "externals": {
-        "@youwol/flux-view": "^1.0.3",
-        "rxjs": "^6.5.5",
-        "@youwol/cdn-client": "^2.0.1",
-        "typescript": "^4.7.4",
+        "@youwol/rx-vdom": "^1.0.1",
+        "rxjs": "^7.5.6",
+        "@youwol/webpm-client": "^3.0.1",
         "@typescript/vfs": "^1.4.0",
         "codemirror": "^5.52.0",
-        "@youwol/fv-tree": "^0.2.3"
+        "@youwol/rx-tree-views": "^0.3.1"
     },
     "includedInBundle": {}
 }
 const externals = {
-    "@youwol/flux-view": {
-        "commonjs": "@youwol/flux-view",
-        "commonjs2": "@youwol/flux-view",
-        "root": "@youwol/flux-view_APIv1"
+    "@youwol/rx-vdom": {
+        "commonjs": "@youwol/rx-vdom",
+        "commonjs2": "@youwol/rx-vdom",
+        "root": "@youwol/rx-vdom_APIv1"
     },
     "rxjs": {
         "commonjs": "rxjs",
         "commonjs2": "rxjs",
-        "root": "rxjs_APIv6"
+        "root": "rxjs_APIv7"
     },
-    "@youwol/cdn-client": {
-        "commonjs": "@youwol/cdn-client",
-        "commonjs2": "@youwol/cdn-client",
-        "root": "@youwol/cdn-client_APIv2"
-    },
-    "typescript": {
-        "commonjs": "typescript",
-        "commonjs2": "typescript",
-        "root": "ts_APIv4"
+    "@youwol/webpm-client": {
+        "commonjs": "@youwol/webpm-client",
+        "commonjs2": "@youwol/webpm-client",
+        "root": "@youwol/webpm-client_APIv3"
     },
     "@typescript/vfs": {
         "commonjs": "@typescript/vfs",
@@ -42,36 +36,32 @@ const externals = {
         "commonjs2": "codemirror",
         "root": "CodeMirror_APIv5"
     },
-    "@youwol/fv-tree": {
-        "commonjs": "@youwol/fv-tree",
-        "commonjs2": "@youwol/fv-tree",
-        "root": "@youwol/fv-tree_APIv02"
+    "@youwol/rx-tree-views": {
+        "commonjs": "@youwol/rx-tree-views",
+        "commonjs2": "@youwol/rx-tree-views",
+        "root": "@youwol/rx-tree-views_APIv03"
     },
     "rxjs/operators": {
         "commonjs": "rxjs/operators",
         "commonjs2": "rxjs/operators",
         "root": [
-            "rxjs_APIv6",
+            "rxjs_APIv7",
             "operators"
         ]
     }
 }
 const exportedSymbols = {
-    "@youwol/flux-view": {
+    "@youwol/rx-vdom": {
         "apiKey": "1",
-        "exportedSymbol": "@youwol/flux-view"
+        "exportedSymbol": "@youwol/rx-vdom"
     },
     "rxjs": {
-        "apiKey": "6",
+        "apiKey": "7",
         "exportedSymbol": "rxjs"
     },
-    "@youwol/cdn-client": {
-        "apiKey": "2",
-        "exportedSymbol": "@youwol/cdn-client"
-    },
-    "typescript": {
-        "apiKey": "4",
-        "exportedSymbol": "ts"
+    "@youwol/webpm-client": {
+        "apiKey": "3",
+        "exportedSymbol": "@youwol/webpm-client"
     },
     "@typescript/vfs": {
         "apiKey": "1",
@@ -81,18 +71,18 @@ const exportedSymbols = {
         "apiKey": "5",
         "exportedSymbol": "CodeMirror"
     },
-    "@youwol/fv-tree": {
-        "apiKey": "02",
-        "exportedSymbol": "@youwol/fv-tree"
+    "@youwol/rx-tree-views": {
+        "apiKey": "03",
+        "exportedSymbol": "@youwol/rx-tree-views"
     }
 }
 
 const mainEntry : {entryFile: string,loadDependencies:string[]} = {
     "entryFile": "./index.ts",
     "loadDependencies": [
-        "@youwol/flux-view",
+        "@youwol/rx-vdom",
         "rxjs",
-        "@youwol/cdn-client"
+        "@youwol/webpm-client"
     ]
 }
 
@@ -105,13 +95,13 @@ const entries = {
 export const setup = {
     name:'@youwol/grapes-coding-playgrounds',
         assetId:'QHlvdXdvbC9ncmFwZXMtY29kaW5nLXBsYXlncm91bmRz',
-    version:'0.1.2',
+    version:'0.2.0-wip',
     shortDescription:"Various components for grapes for live coding in different languages.",
-    developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/grapes-coding-playgrounds',
+    developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/grapes-coding-playgrounds&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/grapes-coding-playgrounds',
     sourceGithub:'https://github.com/youwol/grapes-coding-playgrounds',
     userGuide:'https://l.youwol.com/doc/@youwol/grapes-coding-playgrounds',
-    apiVersion:'01',
+    apiVersion:'02',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -122,7 +112,7 @@ export const setup = {
     },
 
     installMainModule: ({cdnClient, installParameters}:{
-        cdnClient:{install:(unknown) => Promise<Window>},
+        cdnClient:{install:(unknown) => Promise<WindowOrWorkerGlobalScope>},
         installParameters?
     }) => {
         const parameters = installParameters || {}
@@ -136,12 +126,12 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/grapes-coding-playgrounds_APIv01`]
+            return window[`@youwol/grapes-coding-playgrounds_APIv02`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
         name: string,
-        cdnClient:{install:(unknown) => Promise<Window>},
+        cdnClient:{install:(unknown) => Promise<WindowOrWorkerGlobalScope>},
         installParameters?
     }) => {
         const entry = secondaryEntries[name]
@@ -151,7 +141,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/grapes-coding-playgrounds#0.1.2~dist/@youwol/grapes-coding-playgrounds/${entry.name}.js`
+            `@youwol/grapes-coding-playgrounds#0.2.0-wip~dist/@youwol/grapes-coding-playgrounds/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -162,7 +152,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/grapes-coding-playgrounds/${entry.name}_APIv01`]
+            return window[`@youwol/grapes-coding-playgrounds/${entry.name}_APIv02`]
         })
     },
     getCdnDependencies(name?: string){
