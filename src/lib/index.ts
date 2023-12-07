@@ -16,6 +16,7 @@ import { CdnEvent } from '@youwol/webpm-client'
 
 import type * as JsRendererModule from './runner/javascript/js-playground'
 import type * as PyRendererModule from './runner/python/py-playground'
+import type * as TsRendererModule from './runner/typescript/ts-playground'
 import { render } from '@youwol/rx-vdom'
 import type { SplitMode } from './runner/common'
 export function getComponents() {
@@ -145,6 +146,55 @@ export async function pyPlaygroundView({
             loadingScreen?.done()
             const vdom = module.renderElement({
                 pyodide: window[exportedPyodideInstanceName],
+                mode,
+                src,
+                srcTest,
+            })
+            return returnType == 'html' ? render(vdom) : vdom
+        })
+}
+
+export async function tsPlaygroundView({
+    loadingScreenContainer,
+    mode,
+    src,
+    srcTest,
+    returnType,
+}: {
+    loadingScreenContainer?: HTMLElement
+    mode: SplitMode
+    src: string
+    srcTest: string
+    returnType: 'html' | 'vdom'
+}): Promise<HTMLElement | ReturnType<typeof TsRendererModule.renderElement>> {
+    const loadingScreen = loadingScreenContainer
+        ? displayLoadingScreen({
+              container: loadingScreenContainer,
+              logo: `<div style='font-size:x-large'>TypeScript</div>`,
+          })
+        : undefined
+
+    return await setup
+        .installAuxiliaryModule({
+            name: 'ts-playground',
+            cdnClient: webpmClient,
+            installParameters: {
+                scripts: [
+                    `${codeMirrorBasePath}~mode/javascript.min.js`,
+                    `${codeMirrorBasePath}~addons/lint/lint.js`,
+                ],
+                css: [
+                    ...codeMirrorCss,
+                    `${codeMirrorBasePath}~addons/lint/lint.css`,
+                ],
+                onEvent: (ev: CdnEvent) => {
+                    loadingScreen?.next(ev)
+                },
+            },
+        })
+        .then((module: typeof TsRendererModule) => {
+            loadingScreen?.done()
+            const vdom = module.renderElement({
                 mode,
                 src,
                 srcTest,
