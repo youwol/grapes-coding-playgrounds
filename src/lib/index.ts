@@ -15,6 +15,7 @@ import { setup } from '../auto-generated'
 import { CdnEvent } from '@youwol/webpm-client'
 
 import type * as JsRendererModule from './runner/javascript/js-playground'
+import type * as PyRendererModule from './runner/python/py-playground'
 import { render } from '@youwol/rx-vdom'
 import type { SplitMode } from './runner/common'
 export function getComponents() {
@@ -30,6 +31,11 @@ export function getBlocks() {
 }
 
 const codeMirrorBasePath = `codemirror#${setup.runTimeDependencies.externals.codemirror}`
+
+const codeMirrorCss = [
+    `${codeMirrorBasePath}~codemirror.min.css`,
+    `${codeMirrorBasePath}~theme/blackboard.min.css`,
+]
 
 function displayLoadingScreen({ logo, container }) {
     container.style.setProperty('position', 'relative')
@@ -74,10 +80,7 @@ export async function jsPlaygroundView({
             cdnClient: webpmClient,
             installParameters: {
                 scripts: [`${codeMirrorBasePath}~mode/javascript.min.js`],
-                css: [
-                    `${codeMirrorBasePath}~codemirror.min.css`,
-                    `${codeMirrorBasePath}~theme/blackboard.min.css`,
-                ],
+                css: codeMirrorCss,
                 onEvent: (ev: CdnEvent) => {
                     loadingScreen?.next(ev)
                 },
@@ -86,6 +89,66 @@ export async function jsPlaygroundView({
         .then((module: typeof JsRendererModule) => {
             loadingScreen?.done()
             const vdom = module.renderElement({ mode, src, srcTest })
+            return returnType == 'html' ? render(vdom) : vdom
+        })
+}
+export async function pyPlaygroundView({
+    loadingScreenContainer,
+    mode,
+    src,
+    srcTest,
+    pythonModules,
+    exportedPyodideInstanceName,
+    returnType,
+}: {
+    loadingScreenContainer?: HTMLElement
+    mode: SplitMode
+    src: string
+    srcTest: string
+    pythonModules: string[]
+    exportedPyodideInstanceName: string
+    returnType: 'html' | 'vdom'
+}): Promise<HTMLElement | ReturnType<typeof PyRendererModule.renderElement>> {
+    const loadingScreen = loadingScreenContainer
+        ? displayLoadingScreen({
+              container: loadingScreenContainer,
+              logo: `<div style='font-size:xxx-large'>🐍</div>`,
+          })
+        : undefined
+    const pyodideLoaderVersion =
+        setup.runTimeDependencies.externals['@youwol/webpm-pyodide-loader']
+
+    return await setup
+        .installAuxiliaryModule({
+            name: 'py-playground',
+            cdnClient: webpmClient,
+            installParameters: {
+                customInstallers: [
+                    {
+                        module: `@youwol/webpm-pyodide-loader#${pyodideLoaderVersion}`,
+                        installInputs: {
+                            modules: pythonModules,
+                            warmUp: true,
+                            onEvent: (ev) => loadingScreen.next(ev),
+                            exportedPyodideInstanceName,
+                        } as never,
+                    },
+                ],
+                scripts: [`${codeMirrorBasePath}~mode/python.min.js`],
+                css: codeMirrorCss,
+                onEvent: (ev: CdnEvent) => {
+                    loadingScreen?.next(ev)
+                },
+            },
+        })
+        .then((module: typeof PyRendererModule) => {
+            loadingScreen?.done()
+            const vdom = module.renderElement({
+                pyodide: window[exportedPyodideInstanceName],
+                mode,
+                src,
+                srcTest,
+            })
             return returnType == 'html' ? render(vdom) : vdom
         })
 }

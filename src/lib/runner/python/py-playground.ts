@@ -1,4 +1,3 @@
-import { render } from '@youwol/rx-vdom'
 import {
     CodeEditorView,
     Displayable,
@@ -31,7 +30,17 @@ function outputPython2Js(data) {
     return recFct(jsData || data)
 }
 
-export function renderElement(element: HTMLElement, pyodide) {
+export function renderElement({
+    pyodide,
+    src,
+    srcTest,
+    mode,
+}: {
+    pyodide: unknown
+    src: string
+    srcTest: string
+    mode?: SplitMode
+}) {
     const uid = Math.floor(Math.random() * 10000)
 
     window['cdn_client'] = window['@youwol/cdn-client']
@@ -40,13 +49,11 @@ export function renderElement(element: HTMLElement, pyodide) {
         new: (T, ...p) => new T(...p),
         call: (obj: unknown, method: string, ...args) => obj[method](...args),
     }
-    const startingSrc = element.getAttribute('src')
-    const vDOM = new PlaygroundView({
-        testSrc: element.getAttribute('src-test'),
-        splitMode:
-            (element.getAttribute('default-mode') as SplitMode) || 'split',
+    return new PlaygroundView({
+        testSrc: srcTest,
+        splitMode: mode || 'split',
         codeEditorView: new CodeEditorView({
-            src$: new BehaviorSubject(startingSrc),
+            src$: new BehaviorSubject(src),
             language: 'python',
         }),
         toDisplayable: (obj) => {
@@ -56,7 +63,6 @@ export function renderElement(element: HTMLElement, pyodide) {
             return run(src, uid, debug, pyodide)
         },
     })
-    element.appendChild(render(vDOM))
 }
 
 function run(
