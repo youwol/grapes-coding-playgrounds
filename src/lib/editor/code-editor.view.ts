@@ -29,7 +29,7 @@ export function editCode(
         headerView: (editorState) => {
             const headerView = new HeaderView({ state: editorState })
             headerView.run$.pipe(withLatestFrom(src$)).subscribe(([_, src]) => {
-                component && component.addAttributes({ [srcAttName]: src })
+                component?.addAttributes({ [srcAttName]: src })
             })
             return headerView
         },

@@ -50,8 +50,10 @@ export class TsCodeEditorView extends CodeEditorView {
             if (options.editorKind != 'TsCodeEditorView') {
                 return []
             }
-            let fsMapBase = this.fsMap$.getValue()
-            if (!fsMapBase) return
+            const fsMapBase = this.fsMap$.getValue()
+            if (!fsMapBase) {
+                return
+            }
             const highlights = getHighlights(fsMapBase, text)
             return highlights.map((highlight) => ({
                 ...highlight,

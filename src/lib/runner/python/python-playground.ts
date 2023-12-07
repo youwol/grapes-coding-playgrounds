@@ -12,9 +12,9 @@ function outputPython2Js(data) {
     if (!data) {
         return data
     }
-    let recFct = (d) => {
+    const recFct = (d) => {
         if (d instanceof Map) {
-            let converted = {}
+            const converted = {}
             d.forEach((v, k) => {
                 converted[k] = recFct(v)
             })
@@ -27,7 +27,7 @@ function outputPython2Js(data) {
         }
         return d
     }
-    const jsData = data.toJs && data.toJs()
+    const jsData = data.toJs?.()
     return recFct(jsData || data)
 }
 
@@ -67,7 +67,7 @@ function run(
 ): Observable<Displayable> | Displayable {
     try {
         console.log('Run python code', { src, args, uid })
-        let fct = pyodide.runPython(src)(args)
+        const fct = pyodide.runPython(src)(args)
         const output$ = new ReplaySubject(1)
         pyodide.globals.set(`fct_${uid}`, fct)
         pyodide.globals.set(`output_${uid}`, output$)

@@ -24,7 +24,7 @@ export function renderElement(element: HTMLElement) {
                 module: ts.ModuleKind.CommonJS,
                 reportDiagnostics: true,
             }
-            let result = ts.transpileModule(source, compilerOpts)
+            const result = ts.transpileModule(source, compilerOpts)
             return runJavascriptCode(result.outputText, debug)
         },
     })
