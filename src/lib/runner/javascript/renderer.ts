@@ -3,15 +3,18 @@
  * No reference to external symbols is allowed.
  * Implicit argument: 'this' variable is bound to the HTMLElement being rendered
  */
-import { CdnClient, Lib } from '../types'
-
+import { Lib } from '../types'
+import type * as webpmModule from '@youwol/webpm-client'
 export function renderJavaScript() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias -- I strongly believe it helps readability
     const htmlComponent: HTMLDivElement = this
+    // The cdn-client is provided by the hosting application (e.g. stories) which may not have been
+    // migrated to webpm-client yet.
+    const webpmClient: typeof webpmModule =
+        window['@youwol/webpm-client'] || window['@youwol/cdn-client']
 
-    const cdnClient: CdnClient = window['@youwol/cdn-client']
     htmlComponent.style.setProperty('position', 'relative')
-    const loadingScreen = new cdnClient.LoadingScreenView({
+    const loadingScreen = new webpmClient.LoadingScreenView({
         container: htmlComponent,
         logo: `<div style='font-size:x-large'>JavaScript</div>`,
         wrapperStyle: {
@@ -23,11 +26,10 @@ export function renderJavaScript() {
             'font-weight': 'bolder',
         },
     })
-    const apiVersion = htmlComponent.getAttribute('apiVersion')
     loadingScreen.render()
-    const promise = cdnClient
+    const promise = webpmClient
         .install({
-            modules: ['@youwol/fv-tree', 'codemirror'],
+            modules: ['@youwol/rx-tree-views#^0.3.1', 'codemirror#^5.52.0'],
             scripts: ['codemirror#5.52.0~mode/javascript.min.js'],
             css: [
                 'codemirror#5.52.0~codemirror.min.css',
@@ -35,21 +37,17 @@ export function renderJavaScript() {
             ],
         })
         .then((_) => {
-            return cdnClient.install(
-                {
-                    scripts: [
-                        '@youwol/grapes-coding-playgrounds#latest~dist/@youwol/grapes-coding-playgrounds/js-playground.js',
-                    ],
-                    aliases: {
-                        lib: `@youwol/grapes-coding-playgrounds/js-playground_APIv${apiVersion}`,
-                    },
+            return webpmClient.install({
+                scripts: [
+                    '@youwol/grapes-coding-playgrounds#0.2.0-wip~dist/@youwol/grapes-coding-playgrounds/js-playground.js',
+                ],
+                aliases: {
+                    lib: `@youwol/grapes-coding-playgrounds/js-playground_APIv02`,
                 },
-                {
-                    onEvent: (ev) => {
-                        loadingScreen.next(ev)
-                    },
+                onEvent: (ev) => {
+                    loadingScreen.next(ev)
                 },
-            )
+            })
         }) as unknown as Promise<{ lib: Lib }>
 
     promise.then(({ lib }) => {

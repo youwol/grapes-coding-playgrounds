@@ -1,6 +1,6 @@
 import * as ts from 'typescript'
 import { ScriptTarget } from 'typescript'
-import { fetchScript, getUrlBase } from '@youwol/cdn-client'
+import { fetchScript, getUrlBase } from '@youwol/webpm-client'
 
 export function createDefaultMapFromCDN(
     options: ts.CompilerOptions,
