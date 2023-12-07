@@ -1,7 +1,7 @@
 {
     "name": "@youwol/grapes-coding-playgrounds",
     "description": "Various components for grapes for live coding in different languages.",
-    "version": "0.1.2",
+    "version": "0.2.0-wip",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/youwol/grapes-coding-playgrounds#README.md",
     "main": "dist/@youwol/grapes-coding-playgrounds.js",
