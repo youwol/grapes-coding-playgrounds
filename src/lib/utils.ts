@@ -105,6 +105,9 @@ export class Component {
                     src: this.defaultExeSrc,
                     'src-test': this.defaultTestSrc,
                     apiVersion: setup.apiVersion,
+                    ...customCodeTraits.reduce((acc, trait) => {
+                        return { ...acc, [trait.attributeName]: trait.src }
+                    }, {}),
                 },
                 traits: [
                     editSrcTrait({
