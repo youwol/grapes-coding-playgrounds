@@ -4,9 +4,11 @@ const runTimeDependencies = {
         "@youwol/rx-vdom": "^1.0.1",
         "rxjs": "^7.5.6",
         "@youwol/webpm-client": "^3.0.1",
-        "@typescript/vfs": "^1.4.0",
         "codemirror": "^5.52.0",
-        "@youwol/rx-tree-views": "^0.3.1"
+        "@youwol/rx-tree-views": "^0.3.1",
+        "@youwol/webpm-pyodide-loader": "^0.2.0",
+        "typescript": "5.2.2",
+        "@typescript/vfs": "^1.4.0"
     },
     "includedInBundle": {}
 }
@@ -26,11 +28,6 @@ const externals = {
         "commonjs2": "@youwol/webpm-client",
         "root": "@youwol/webpm-client_APIv3"
     },
-    "@typescript/vfs": {
-        "commonjs": "@typescript/vfs",
-        "commonjs2": "@typescript/vfs",
-        "root": "@typescript/vfs_APIv1"
-    },
     "codemirror": {
         "commonjs": "codemirror",
         "commonjs2": "codemirror",
@@ -40,6 +37,21 @@ const externals = {
         "commonjs": "@youwol/rx-tree-views",
         "commonjs2": "@youwol/rx-tree-views",
         "root": "@youwol/rx-tree-views_APIv03"
+    },
+    "@youwol/webpm-pyodide-loader": {
+        "commonjs": "@youwol/webpm-pyodide-loader",
+        "commonjs2": "@youwol/webpm-pyodide-loader",
+        "root": "@youwol/webpm-pyodide-loader_APIv02"
+    },
+    "typescript": {
+        "commonjs": "typescript",
+        "commonjs2": "typescript",
+        "root": "ts_APIv5"
+    },
+    "@typescript/vfs": {
+        "commonjs": "@typescript/vfs",
+        "commonjs2": "@typescript/vfs",
+        "root": "@typescript/vfs_APIv1"
     },
     "rxjs/operators": {
         "commonjs": "rxjs/operators",
@@ -63,10 +75,6 @@ const exportedSymbols = {
         "apiKey": "3",
         "exportedSymbol": "@youwol/webpm-client"
     },
-    "@typescript/vfs": {
-        "apiKey": "1",
-        "exportedSymbol": "@typescript/vfs"
-    },
     "codemirror": {
         "apiKey": "5",
         "exportedSymbol": "CodeMirror"
@@ -74,6 +82,18 @@ const exportedSymbols = {
     "@youwol/rx-tree-views": {
         "apiKey": "03",
         "exportedSymbol": "@youwol/rx-tree-views"
+    },
+    "@youwol/webpm-pyodide-loader": {
+        "apiKey": "02",
+        "exportedSymbol": "@youwol/webpm-pyodide-loader"
+    },
+    "typescript": {
+        "apiKey": "5",
+        "exportedSymbol": "ts"
+    },
+    "@typescript/vfs": {
+        "apiKey": "1",
+        "exportedSymbol": "@typescript/vfs"
     }
 }
 
@@ -86,7 +106,35 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
     ]
 }
 
-const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDependencies:string[]}}= {}
+const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDependencies:string[]}}= {
+    "js-playground": {
+        "entryFile": "./lib/runner/javascript/js-playground.ts",
+        "loadDependencies": [
+            "@youwol/rx-tree-views",
+            "codemirror"
+        ],
+        "name": "js-playground"
+    },
+    "py-playground": {
+        "entryFile": "./lib/runner/python/py-playground.ts",
+        "loadDependencies": [
+            "@youwol/rx-tree-views",
+            "codemirror",
+            "@youwol/webpm-pyodide-loader"
+        ],
+        "name": "py-playground"
+    },
+    "ts-playground": {
+        "entryFile": "./lib/runner/typescript/ts-playground.ts",
+        "loadDependencies": [
+            "@youwol/rx-tree-views",
+            "codemirror",
+            "typescript",
+            "@typescript/vfs"
+        ],
+        "name": "ts-playground"
+    }
+}
 
 const entries = {
      '@youwol/grapes-coding-playgrounds': './index.ts',

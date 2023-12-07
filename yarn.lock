@@ -1438,7 +1438,7 @@
   resolved "https://registry.yarnpkg.com/@youwol/tsconfig/-/tsconfig-1.0.0.tgz#76e8569781dc4bdc53f27dc0b4f3cd6e17e1bd52"
   integrity sha512-R+8tI08X56yOpSfGTJ2gG5GWZVpirr63Prmtfe3EQgc0pXhNpE4kzoxS6ByYsRZPn+ydGJxE61P424uycm+rNQ==
 
-"@youwol/webpm-client@^3.0.1":
+"@youwol/webpm-client@^3.0.0", "@youwol/webpm-client@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@youwol/webpm-client/-/webpm-client-3.0.1.tgz#96a99c10bbadb3ca938c2a6381b456e08dad9926"
   integrity sha512-MeemNhEe1X2uubwSZwzOvMhnaEBbDCMzvL7EF+9qEbPzOefv8qxVITKCyTIfDHx+OIQ+ERyWD+stKTTFp2L0SA==
@@ -1446,6 +1446,14 @@
     "@youwol/rx-vdom" "^1.0.1"
     rxjs "^7.5.6"
     semver "^7.3.4"
+
+"@youwol/webpm-pyodide-loader@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@youwol/webpm-pyodide-loader/-/webpm-pyodide-loader-0.2.0.tgz#b555de974f87431a313ca9fa130ee306fe584a73"
+  integrity sha512-+6aUsfeqQ5EZifPlGbbzt6e2dsSOeWKJcB/mqv+/V4/L7tbtv25aRSPDeL45GGO2ssZdqDr6wRRhh4IEi/L9Qw==
+  dependencies:
+    "@youwol/webpm-client" "^3.0.0"
+    pyodide "^0.21.3"
 
 abab@^2.0.6:
   version "2.0.6"
@@ -1743,6 +1751,11 @@ balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
+
+base-64@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/base-64/-/base-64-1.0.0.tgz#09d0f2084e32a3fd08c2475b973788eee6ae8f4a"
+  integrity sha512-kwDPIFCGx0NZHog36dj+tHiwP4QMzsZ3AgMViUBKI0+V5n4U0ufTCUMhnQ04diaRI8EX/QcPfql7zlhZ7j4zgg==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -4450,6 +4463,15 @@ pure-rand@^6.0.0:
   resolved "https://registry.yarnpkg.com/pure-rand/-/pure-rand-6.0.1.tgz#31207dddd15d43f299fdcdb2f572df65030c19af"
   integrity sha512-t+x1zEHDjBwkDGY5v5ApnZ/utcd4XYDiJsaQQoptTXgUXX95sDg1elCdJghzicm7n2mbCBJ3uYWr6M22SO19rg==
 
+pyodide@^0.21.3:
+  version "0.21.3"
+  resolved "https://registry.yarnpkg.com/pyodide/-/pyodide-0.21.3.tgz#0be64868231fa59a5372a1191d157a9e8d83e9d7"
+  integrity sha512-5fu5P8ys8V8tKTsK9lag0HattbZQuFRdnNzv1LLOLCieM9A96OPs2cF29lPpcD9N+8GuUtfrGCWEMKiupTHUlA==
+  dependencies:
+    base-64 "^1.0.0"
+    node-fetch "^2.6.1"
+    ws "^8.5.0"
+
 querystringify@^2.1.1:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
@@ -5553,6 +5575,11 @@ ws@^8.11.0:
   version "8.13.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.13.0.tgz#9a9fb92f93cf41512a0735c8f4dd09b8a1211cd0"
   integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==
+
+ws@^8.5.0:
+  version "8.14.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.14.2.tgz#6c249a806eb2db7a20d26d51e7709eab7b2e6c7f"
+  integrity sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==
 
 xml-name-validator@^4.0.0:
   version "4.0.0"
