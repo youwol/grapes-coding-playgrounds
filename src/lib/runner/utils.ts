@@ -1,21 +1,18 @@
 import { InterpretError } from './common/errors.view'
-import { VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { Displayable } from './common'
 
-class ErrorView {
+class ErrorView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
     public readonly innerText: string
     public readonly title: string
     public readonly exception: unknown
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(params: { title: string; exception: unknown }) {
         Object.assign(this, params)
         this.innerText = this.title
-        this.children = [
-            {
-                innerText: this.exception,
-            },
-        ]
+        this.children = [{ tag: 'div', innerText: this.exception.toString() }]
     }
 }
 

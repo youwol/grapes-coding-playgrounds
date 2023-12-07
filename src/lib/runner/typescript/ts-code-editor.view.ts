@@ -1,10 +1,9 @@
 import { CodeEditorView } from '../common'
 import * as ts from 'typescript'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, filter, take, withLatestFrom } from 'rxjs'
 import { createDefaultMapFromCDN } from './cdn_utils'
 import CodeMirror from 'codemirror'
 import { getHighlights } from './diagnostics.view'
-import { filter, take, withLatestFrom } from 'rxjs/operators'
 
 export const compilerOptions = {
     target: ts.ScriptTarget.ES2020,
@@ -51,8 +50,10 @@ export class TsCodeEditorView extends CodeEditorView {
             if (options.editorKind != 'TsCodeEditorView') {
                 return []
             }
-            let fsMapBase = this.fsMap$.getValue()
-            if (!fsMapBase) return
+            const fsMapBase = this.fsMap$.getValue()
+            if (!fsMapBase) {
+                return
+            }
             const highlights = getHighlights(fsMapBase, text)
             return highlights.map((highlight) => ({
                 ...highlight,

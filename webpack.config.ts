@@ -1,23 +1,15 @@
 import * as path from 'path'
-// Do not shorten following import, it will cause webpack.config file to not compile anymore
-import { setup } from './src/auto-generated'
 import * as webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+// Do not shorten following import, it will cause webpack.config file to not compile anymore
+import { setup } from './src/auto-generated'
 
 const ROOT = path.resolve(__dirname, 'src')
 const DESTINATION = path.resolve(__dirname, 'dist')
 
 const webpackConfig: webpack.Configuration = {
     context: ROOT,
-    entry: {
-        [setup.name]: './lib/index.ts',
-        [setup.name + '/js-playground']:
-            './lib/runner/javascript/js-playground.ts',
-        [setup.name + '/ts-playground']:
-            './lib/runner/typescript/ts-playground.ts',
-        [setup.name + '/python-playground']:
-            './lib/runner/python/python-playground.ts',
-    },
+    entry: setup.entries,
     plugins: [
         new BundleAnalyzerPlugin({
             analyzerMode: 'static',
@@ -51,5 +43,4 @@ const webpackConfig: webpack.Configuration = {
     },
     devtool: 'source-map',
 }
-
 export default webpackConfig

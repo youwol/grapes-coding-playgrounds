@@ -1,11 +1,12 @@
-import { childrenAppendOnly$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { ReplaySubject } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-export class TestView {
+export class TestView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
     public readonly testSrc: string
     public readonly output: unknown
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly expect$: ReplaySubject<{
         title: string
         validated: boolean
@@ -18,7 +19,7 @@ export class TestView {
             this.expect$.next({ title, validated })
         }
         try {
-            let result = new Function(this.testSrc)()(this.output, {
+            const result = new Function(this.testSrc)()(this.output, {
                 ...window,
                 expect,
             })
@@ -32,20 +33,29 @@ export class TestView {
         }
         this.children = [
             {
-                children: childrenAppendOnly$(
-                    this.expect$.pipe(map((d) => [d])),
-                    ({ title, validated }) => {
+                tag: 'div',
+                children: {
+                    policy: 'append',
+                    source$: this.expect$.pipe(map((d) => [d])),
+                    vdomMap: ({
+                        title,
+                        validated,
+                    }: {
+                        title: string
+                        validated: boolean
+                    }) => {
                         return new TestItemView({ title, validated })
                     },
-                ),
+                },
             },
         ]
     }
 }
 
-class TestItemView {
+class TestItemView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
     public readonly class = 'd-flex align-items-center'
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly title: string
     public readonly validated: boolean
 
@@ -53,11 +63,12 @@ class TestItemView {
         Object.assign(this, params)
         this.children = [
             {
+                tag: 'div',
                 class: this.validated
                     ? 'fas fa-check fv-text-success'
                     : 'fas fa-times fv-text-error',
             },
-            { class: 'px-2', innerText: this.title },
+            { tag: 'div', class: 'px-2', innerText: this.title },
         ]
     }
 }

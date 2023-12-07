@@ -1,5 +1,4 @@
-import { BehaviorSubject } from 'rxjs'
-import { withLatestFrom } from 'rxjs/operators'
+import { BehaviorSubject, withLatestFrom } from 'rxjs'
 import { HeaderView } from './editor-header.view'
 
 import grapesjs from 'grapesjs'
@@ -30,7 +29,7 @@ export function editCode(
         headerView: (editorState) => {
             const headerView = new HeaderView({ state: editorState })
             headerView.run$.pipe(withLatestFrom(src$)).subscribe(([_, src]) => {
-                component && component.addAttributes({ [srcAttName]: src })
+                component?.addAttributes({ [srcAttName]: src })
             })
             return headerView
         },

@@ -1,4 +1,3 @@
-import { render } from '@youwol/flux-view'
 import {
     CodeEditorView,
     Displayable,
@@ -12,9 +11,9 @@ function outputPython2Js(data) {
     if (!data) {
         return data
     }
-    let recFct = (d) => {
+    const recFct = (d) => {
         if (d instanceof Map) {
-            let converted = {}
+            const converted = {}
             d.forEach((v, k) => {
                 converted[k] = recFct(v)
             })
@@ -27,11 +26,21 @@ function outputPython2Js(data) {
         }
         return d
     }
-    const jsData = data.toJs && data.toJs()
+    const jsData = data.toJs?.()
     return recFct(jsData || data)
 }
 
-export function renderElement(element: HTMLElement, pyodide) {
+export function renderElement({
+    pyodide,
+    src,
+    srcTest,
+    mode,
+}: {
+    pyodide: unknown
+    src: string
+    srcTest: string
+    mode?: SplitMode
+}) {
     const uid = Math.floor(Math.random() * 10000)
 
     window['cdn_client'] = window['@youwol/cdn-client']
@@ -40,13 +49,11 @@ export function renderElement(element: HTMLElement, pyodide) {
         new: (T, ...p) => new T(...p),
         call: (obj: unknown, method: string, ...args) => obj[method](...args),
     }
-    const startingSrc = element.getAttribute('src')
-    const vDOM = new PlaygroundView({
-        testSrc: element.getAttribute('src-test'),
-        splitMode:
-            (element.getAttribute('default-mode') as SplitMode) || 'split',
+    return new PlaygroundView({
+        testSrc: srcTest,
+        splitMode: mode || 'split',
         codeEditorView: new CodeEditorView({
-            src$: new BehaviorSubject(startingSrc),
+            src$: new BehaviorSubject(src),
             language: 'python',
         }),
         toDisplayable: (obj) => {
@@ -56,7 +63,6 @@ export function renderElement(element: HTMLElement, pyodide) {
             return run(src, uid, debug, pyodide)
         },
     })
-    element.appendChild(render(vDOM))
 }
 
 function run(
@@ -67,7 +73,7 @@ function run(
 ): Observable<Displayable> | Displayable {
     try {
         console.log('Run python code', { src, args, uid })
-        let fct = pyodide.runPython(src)(args)
+        const fct = pyodide.runPython(src)(args)
         const output$ = new ReplaySubject(1)
         pyodide.globals.set(`fct_${uid}`, fct)
         pyodide.globals.set(`output_${uid}`, output$)
@@ -90,6 +96,7 @@ else:
         return new InterpretError({
             exception: e,
             view: {
+                tag: 'div',
                 innerText: e,
             },
         }) as unknown as Displayable

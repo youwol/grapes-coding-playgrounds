@@ -1,4 +1,4 @@
-import { attr$, child$, children$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import * as ts from 'typescript'
 import {
     createSystem,
@@ -141,11 +141,12 @@ export class DiagnosticsState {
 
 type DiagnosticType = 'semantic' | 'syntactic' | 'compiler'
 
-export class DiagnosticsHeaderView implements VirtualDOM {
+export class DiagnosticsHeaderView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
     public readonly class = 'd-flex align-items-center justify-content-center'
     public readonly types: DiagnosticType[]
     public readonly selectedType$: BehaviorSubject<DiagnosticType>
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly diagnostics$: Record<
         DiagnosticType,
         Observable<ts.Diagnostic[]>
@@ -159,24 +160,23 @@ export class DiagnosticsHeaderView implements VirtualDOM {
         Object.assign(this, params)
         this.children = this.types.map((type) => {
             return {
-                class: attr$(
-                    this.selectedType$,
-                    (selected): string =>
+                tag: 'div',
+                class: {
+                    source$: this.selectedType$,
+                    vdomMap: (selected): string =>
                         selected == type ? 'fv-text-focus' : '',
-                    {
-                        wrapper: (d) =>
-                            `${d} p-2 fv-pointer my-1 mx-1 border-bottom d-flex align-items-center`,
-                    },
-                ),
+                    wrapper: (d) =>
+                        `${d} p-2 fv-pointer my-1 mx-1 border-bottom d-flex align-items-center`,
+                },
                 children: [
+                    { tag: 'div', innerText: type },
                     {
-                        innerText: type,
-                    },
-                    {
-                        innerText: attr$(
-                            this.diagnostics$[type],
-                            (diagnostics) => `(${diagnostics.length})`,
-                        ),
+                        tag: 'div',
+                        innerText: {
+                            source$: this.diagnostics$[type],
+                            vdomMap: (diagnostics: unknown[]) =>
+                                `(${diagnostics.length})`,
+                        },
                     },
                 ],
                 onclick: () => this.selectedType$.next(type),
@@ -185,47 +185,53 @@ export class DiagnosticsHeaderView implements VirtualDOM {
     }
 }
 
-export class DiagnosticContentView implements VirtualDOM {
+export class DiagnosticContentView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
     public readonly class = 'flex-grow-1 w-100 overflow-auto'
     public readonly style = {
         minHeight: '0',
     }
     public readonly diagnostics$: Observable<ts.Diagnostic[]>
-    public readonly children: Array<VirtualDOM>
+    public readonly children: ChildrenLike
 
     constructor(params: { diagnostics$: Observable<ts.Diagnostic[]> }) {
         Object.assign(this, params)
         this.children = [
             {
+                tag: 'div',
                 class: 'h-100 w-100',
-                children: children$(this.diagnostics$, (diagnostics) => {
-                    return diagnostics.map(
-                        (diagnostic) => new DiagnosticView({ diagnostic }),
-                    )
-                }),
+                children: {
+                    policy: 'replace',
+                    source$: this.diagnostics$,
+                    vdomMap: (diagnostics: ts.Diagnostic[]) => {
+                        return diagnostics.map(
+                            (diagnostic) => new DiagnosticView({ diagnostic }),
+                        )
+                    },
+                },
             },
         ]
     }
 }
 
-export class DiagnosticView implements VirtualDOM {
+export class DiagnosticView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
     public readonly diagnostic: ts.Diagnostic
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(params: { diagnostic: ts.Diagnostic }) {
         Object.assign(this, params)
         this.children = [
-            {
-                innerText: this.diagnostic.messageText,
-            },
+            { tag: 'div', innerText: this.diagnostic.messageText as string },
         ]
     }
 }
 
-export class DiagnosticsView implements VirtualDOM {
+export class DiagnosticsView implements VirtualDOM<'div'> {
+    public readonly tag: 'div'
     public readonly class = 'd-flex flex-column'
     public readonly state: DiagnosticsState
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly selectedType$ = new BehaviorSubject<DiagnosticType>(
         'semantic',
     )
@@ -246,13 +252,13 @@ export class DiagnosticsView implements VirtualDOM {
                 types: ['semantic', 'syntactic', 'compiler'],
                 diagnostics$,
             }),
-            child$(
-                this.selectedType$,
-                (type) =>
+            {
+                source$: this.selectedType$,
+                vdomMap: (type: DiagnosticType) =>
                     new DiagnosticContentView({
                         diagnostics$: diagnostics$[type],
                     }),
-            ),
+            },
         ]
     }
 }

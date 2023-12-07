@@ -1,10 +1,10 @@
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs'
-import { HTMLElement$, VirtualDOM } from '@youwol/flux-view'
+import { RxHTMLElement, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 
 import CodeMirror from 'codemirror'
 import { take } from 'rxjs/operators'
 
-export class CodeEditorView {
+export class CodeEditorView implements VirtualDOM<'div'> {
     public readonly config = {
         value: '',
         lineNumbers: true,
@@ -13,20 +13,19 @@ export class CodeEditorView {
         indentUnit: 4,
     }
     public readonly language: string
+    public readonly tag = 'div'
     public readonly class = 'w-100 h-100 d-flex flex-column overflow-auto'
     public readonly style = {
-        'font-size': 'initial',
+        fontSize: 'initial',
     }
     public readonly src$: BehaviorSubject<string>
     public readonly run$ = new Subject<boolean>()
     public readonly change$ = new ReplaySubject<CodeMirror.EditorChange[]>(1)
     public readonly cursor$ = new ReplaySubject<CodeMirror.Position>(1)
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     public readonly nativeEditor$ = new ReplaySubject<CodeMirror.Editor>(1)
-    public readonly connectedCallback: (
-        elem: HTMLDivElement & HTMLElement$,
-    ) => void
+    public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
     constructor(params: {
         src$: BehaviorSubject<string>
         language: string
@@ -45,9 +44,10 @@ export class CodeEditorView {
         }
         this.children = [
             {
+                tag: 'div',
                 id: 'code-mirror-editor',
                 class: 'w-100 h-100',
-                connectedCallback: (elem: HTMLElement$ & HTMLDivElement) => {
+                connectedCallback: (elem: RxHTMLElement<'div'>) => {
                     const editor = CodeMirror(elem, config)
                     this.nativeEditor$.next(editor)
                     editor.on('changes', (_, changeObj) => {

@@ -1,15 +1,16 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
-import { attr$, childrenAppendOnly$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { DataView, Log, LogObjectHeader } from './utils.view'
 import { map, take } from 'rxjs/operators'
 
-export class JournalView {
+export class JournalView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
     public readonly class = 'h-100 d-flex flex-column'
     public readonly style = {
         minHeight: '0px',
     }
     public readonly log$: Observable<Log>
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly selectedLog$: Subject<Log>
 
     constructor(params: { log$: Observable<Log> }) {
@@ -20,16 +21,18 @@ export class JournalView {
 
         this.children = [
             {
+                tag: 'div',
                 class: 'd-flex flex-wrap justify-content-center',
-                children: childrenAppendOnly$(
-                    this.log$.pipe(map((d) => [d])),
-                    (log: Log) => {
+                children: {
+                    policy: 'append',
+                    source$: this.log$.pipe(map((d) => [d])),
+                    vdomMap: (log: Log) => {
                         return new LogObjectHeader({
                             log,
                             selectedLog$: this.selectedLog$,
                         })
                     },
-                ),
+                },
             },
             /*Below we could have used
                 child$(
@@ -41,23 +44,28 @@ export class JournalView {
               */
 
             {
+                tag: 'div',
                 class: 'flex-grow-1 overflow-auto',
                 style: {
                     minHeight: '0',
                 },
-                children: childrenAppendOnly$(
-                    this.log$.pipe(map((d) => [d])),
-                    (log: Log) => {
+                children: {
+                    policy: 'append',
+                    source$: this.log$.pipe(map((d) => [d])),
+                    vdomMap: (log: Log) => {
                         return {
-                            class: attr$(this.selectedLog$, (selected) =>
-                                selected && selected.title == log.title
-                                    ? 'h-100'
-                                    : 'd-none',
-                            ),
+                            tag: 'div',
+                            class: {
+                                source$: this.selectedLog$,
+                                vdomMap: (selected: Log) =>
+                                    selected && selected.title == log.title
+                                        ? 'h-100'
+                                        : 'd-none',
+                            },
                             children: [new DataView({ data: log.data })],
                         }
                     },
-                ),
+                },
             },
         ]
     }
