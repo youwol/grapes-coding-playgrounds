@@ -143,13 +143,13 @@ const entries = {
 export const setup = {
     name:'@youwol/grapes-coding-playgrounds',
         assetId:'QHlvdXdvbC9ncmFwZXMtY29kaW5nLXBsYXlncm91bmRz',
-    version:'0.2.1-wip',
+    version:'0.3.0-wip',
     shortDescription:"Various components for grapes for live coding in different languages.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/grapes-coding-playgrounds&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/grapes-coding-playgrounds',
     sourceGithub:'https://github.com/youwol/grapes-coding-playgrounds',
     userGuide:'https://l.youwol.com/doc/@youwol/grapes-coding-playgrounds',
-    apiVersion:'02',
+    apiVersion:'03',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -174,7 +174,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/grapes-coding-playgrounds_APIv02`]
+            return window[`@youwol/grapes-coding-playgrounds_APIv03`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
@@ -189,7 +189,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/grapes-coding-playgrounds#0.2.1-wip~dist/@youwol/grapes-coding-playgrounds/${entry.name}.js`
+            `@youwol/grapes-coding-playgrounds#0.3.0-wip~dist/@youwol/grapes-coding-playgrounds/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -200,7 +200,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/grapes-coding-playgrounds/${entry.name}_APIv02`]
+            return window[`@youwol/grapes-coding-playgrounds/${entry.name}_APIv03`]
         })
     },
     getCdnDependencies(name?: string){
