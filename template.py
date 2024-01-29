@@ -30,7 +30,7 @@ differed_dependencies = {
     "@youwol/webpm-pyodide-loader": "^0.2.0",
     # `ts-playground` auxiliary module
     # `typescript` version should match the one from coming from  `@youwol/tsconfig`
-    "typescript": "5.2.2",
+    "typescript": "5.3.3",
     "@typescript/vfs": "^1.4.0",
 }
 
