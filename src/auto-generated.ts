@@ -7,7 +7,7 @@ const runTimeDependencies = {
         "codemirror": "^5.52.0",
         "@youwol/rx-tree-views": "^0.3.1",
         "@youwol/webpm-pyodide-loader": "^0.2.0",
-        "typescript": "5.2.2",
+        "typescript": "5.3.3",
         "@typescript/vfs": "^1.4.0"
     },
     "includedInBundle": {}
